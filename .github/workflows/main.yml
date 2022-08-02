@@ -1,0 +1,13 @@
+name: Django_deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: pull and reload on Aliyun
+        run: sshpass -p ${{secrets.ECS_PASSWORD}} ssh -o StrictHostKeyChecking=no couteau69586@${{secrets.ECS_IP}} "cd ~/backend; python kill.py; git pull --force; git checkout main; python run.py;"
