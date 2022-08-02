@@ -48,8 +48,7 @@ def register(request):
         new_user.delete()
         return JsonResponse({'status_code': 6})
 
-    token = create_token(username)
-    return JsonResponse({'status_code': 1, 'username': username, 'token': token})
+    return JsonResponse({'status_code': 1})
 
 
 @csrf_exempt
