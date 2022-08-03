@@ -8,4 +8,5 @@ urlpatterns = [
     path('deleteMem', deleteMem),
     path('view', view),
     path('viewSomeonesTeams', viewSomeonesTeams),
+    # path('clear',clear),
 ]
