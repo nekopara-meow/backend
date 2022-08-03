@@ -1,15 +1,12 @@
 import json
-import re
-from team.models import Team
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from pytz import utc
+
 from interact.models import Member_in_Team
+from team.models import Team
+from team.models import Uml
 from users.models import User
-from utils.email import *
-from interact import *
-from utils.token import create_token
-from utils.token import check_token
 
 import datetime
 from django.db.models import Q
@@ -136,12 +133,36 @@ def join(request):
     username = json.loads(request.body)['username']
     team_id = json.loads(request.body)['team_id']
 
-# @csrf_exempt
-# def clear(request):
-#     team_list = Team.objects.all()
-#     for teams in team_list:
-#         teams.delete()
-#     mem_in_team_list = Member_in_Team.objects.all()
-#     for mems in mem_in_team_list:
-#         mems.delete()
-#     return JsonResponse({'status_code': 1, 'msg': "清除成功"})
+
+
+@csrf_exempt
+def save_uml(request):
+    if request.method == 'POST':
+        username = json.loads(request.body)['username']
+        team_id = json.loads(request.body)['team_id']
+        uml_url = json.loads(request.body)['uml_url']
+        new_uml = Uml()
+        new_uml.team_id = team_id
+        new_uml.uml_url = uml_url
+        new_uml.creator = username
+        try:
+            new_uml.save()
+            return JsonResponse({'status_code': 1})
+        except:
+            return JsonResponse({'status_code': 2})
+    else:
+        return JsonResponse({'status_code': -1})
+
+
+@csrf_exempt
+def load_uml(request):
+    if request.method == 'POST':
+        uml_id = json.loads(request.body)['uml_id']
+        try:
+            uml = Uml.objects.get(uml_id=uml_id)
+        except:
+            return JsonResponse({'status_code': 2})
+        uml_url = uml.uml_url
+        return JsonResponse({'status_code': 1, 'uml_url': uml_url})
+    else:
+        return JsonResponse({'status_code': -1})
