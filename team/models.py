@@ -8,7 +8,7 @@ import datetime
 class Team(models.Model):
     team_id = models.AutoField(verbose_name="团队ID", unique=True, primary_key=True)
     team_name = models.CharField(max_length=50, verbose_name="团队名称")
-    establisher = models.CharField(max_length=128, verbose_name="创始人用户名")
-    establish_time = models.DateTimeField(max_length=80, verbose_name="团队成立时间")
+    creator = models.CharField(max_length=128, verbose_name="创始人用户名")
+    create_time = models.DateTimeField(max_length=80, verbose_name="团队成立时间",auto_now_add=True)
     member_num = models.IntegerField(verbose_name="成员数", default=1)
     project_num = models.IntegerField(verbose_name="项目数", default=0)
