@@ -16,6 +16,8 @@ class AuthorizeMiddleware(MiddlewareMixin):
             # 从请求头中获取 username 和 token
             username = request.META.get('HTTP_USERNAME')
             token = request.META.get('HTTP_AUTHORIZATION')
+            print(username)
+            print(token)
             if username is None or token is None:
                 return JsonResponse({'errno': 100001, 'msg': "未查询到登录信息"})
             else:
