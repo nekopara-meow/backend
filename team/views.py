@@ -22,9 +22,7 @@ def establish(request):
     # success
     new_team = Team()
     new_team.team_name = team_name
-    new_team.establisher = username
-    new_team.establish_time = datetime.datetime.now()
-    new_team.username = username
+    new_team.creator = username
     new_team.save()
 
     new_mem_in_team = Member_in_Team()
@@ -39,7 +37,7 @@ def establish(request):
 def invite(request):
     inviter_username = json.loads(request.body)['inviter']  # 邀请人
     invitee_username = json.loads(request.body)['invitee']  # 被邀请人
-    team_id= json.loads(request.body)['team_id']
+    team_id = json.loads(request.body)['team_id']
     inviter = User.objects.get(username=inviter_username)
     invitee = User.objects.get(username=invitee_username)
     already_in = Member_in_Team.objects.get(username=invitee_username, team_id=team_id)
@@ -70,6 +68,7 @@ def setAdmins(request):
     settee.priority = 1
     return JsonResponse({'status_code': 1, 'msg': "Set success"})
 
+
 @csrf_exempt
 def deleteMem(request):
     deleter_username = json.loads(request.body)['deleter_username']  # 删除人
@@ -83,6 +82,7 @@ def deleteMem(request):
     # delete successfully
     Member_in_Team.objects.get(username=deletee_username, team_id=team_id).delete()
 
+
 @csrf_exempt
 def view(request):
     team_id = json.loads(request.body)['team_id']
@@ -95,6 +95,7 @@ def view(request):
         ans_list.append(a)  # 将每个成员信息拼接起来
     return JsonResponse({'status_code': 1, 'ans_list': ans_list})
 
+
 @csrf_exempt
 def viewSomeonesTeams(request):
     username = json.loads(request.body)['username']
@@ -102,9 +103,9 @@ def viewSomeonesTeams(request):
     ans_list = []
     for teams in team_list:
         a = {'team_name': teams.team_name, 'establisher': teams.establisher,
-             'establish_time':  teams.establish_time, 'member_num': teams.member_num,
+             'establish_time': teams.establish_time, 'member_num': teams.member_num,
              'project_num': teams.project_num
-        }
+             }
         ans_list.append(a)
     return JsonResponse({'status_code': 1, 'ans_list': ans_list})
 
