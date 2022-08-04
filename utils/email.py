@@ -29,3 +29,4 @@ def send_email_confirm(email, code):
     msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, [email])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
+
