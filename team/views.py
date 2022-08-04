@@ -90,39 +90,81 @@ def deleteMem(request):
 
 
 @csrf_exempt
-def view(request):
-    team_id = json.loads(request.body)['teamid']
+def viewMembersInTeam(request):
+    team_id = json.loads(request.body)['team_id']
     member_list = Member_in_Team.objects.filter(team_id=team_id)
     ans_list = []
     for members in member_list:  # 枚举团队中的每个成员
         member = User.objects.get(username=members.username)
         a = {'username': member.username, 'email': member.email,
-             'priority': Member_in_Team.objects.get(username=members.username, team_id=team_id).priority
+             'priority': Member_in_Team.objects.get(username=members.username, team_id=team_id).priority,
+             'avatar': member.avatar, 'brief_intro': member.brief_intro
              }
         ans_list.append(a)  # 将每个成员信息拼接起来
     return JsonResponse({'status_code': 1, 'ans_list': ans_list})
 
 
 @csrf_exempt
-def viewSomeonesTeams(request):
+def viewSomeonesTeams0(request):
     username = json.loads(request.body)['username']
-    team_list = Member_in_Team.objects.filter(username=username)
+    team_list = Member_in_Team.objects.filter(username=username, priority=0)
+    ans_list = []
+
+    for teams in team_list:
+        team = Team.objects.get(team_id=teams.team_id)
+        a = {'team_id': team.team_id, 'team_name': team.team_name,
+             'creator': team.creator, 'team_avatar': team.avatar,
+             'team_brief_intro': team.brief_intro,
+             'create_time': team.create_time, 'member_num': team.member_num,
+             'project_num': team.project_num
+             }
+        ans_list.append(a)
+
+    return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+
+@csrf_exempt
+def viewSomeonesTeams1(request):
+    username = json.loads(request.body)['username']
+    team_list = Member_in_Team.objects.filter(username=username, priority=1)
+    ans_list = []
+
+
+    for teams in team_list:
+        team = Team.objects.get(team_id=teams.team_id)
+        a = {'team_id':team.team_id, 'team_name': team.team_name,
+             'creator': team.creator, 'team_avatar': team.avatar,
+             'team_brief_intro': team.brief_intro,
+             'create_time': team.create_time, 'member_num': team.member_num,
+             'project_num': team.project_num
+             }
+        ans_list.append(a)
+
+    return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+
+@csrf_exempt
+def viewSomeonesTeams2(request):
+    username = json.loads(request.body)['username']
+    team_list = Member_in_Team.objects.filter(username=username, priority=2)
     ans_list = []
     for teams in team_list:
         team = Team.objects.get(team_id=teams.team_id)
-        a = {'team_name': team.team_name, 'creator': team.creator,
+        a = {'team_id':team.team_id, 'team_name': team.team_name,
+             'creator': team.creator, 'team_avatar': team.avatar,
+             'team_brief_intro': team.brief_intro,
              'create_time': team.create_time, 'member_num': team.member_num,
              'project_num': team.project_num
              }
         ans_list.append(a)
     return JsonResponse({'status_code': 1, 'ans_list': ans_list})
 
-
 @csrf_exempt
-def join(request):
-    username = json.loads(request.body)['username']
+def viewTeam(request):
     team_id = json.loads(request.body)['team_id']
-
+    team = Team.objects.get(team_id=team_id)
+    return JsonResponse({'status_code': 1, 'avatar': team.avatar,
+                         'team_name': team.team_name, 'brief_intro': team.brief_intro,
+                         'create_time': team.create_time, 'creator': team.creator
+                         })
 
 
 @csrf_exempt
