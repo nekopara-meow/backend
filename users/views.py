@@ -40,6 +40,8 @@ def register(request):
         new_user.username = username
         new_user.password = hash_code(password1)
         new_user.email = email
+        new_user.brief_intro = '这个人很懒，什么也没写'
+        new_user.avatar = 'https://miaotu-headers.oss-cn-hangzhou.aliyuncs.com/yonghutouxiang/Transparent_Akkarin.jpg'
         new_user.save()
 
         code = make_confirm_string(new_user)
@@ -79,6 +81,30 @@ def login(request):
 
 
 @csrf_exempt
+def change_password(request):
+    if request.method == 'POST':
+        username = json.loads(request.body)['username']
+        old_password = json.loads(request.body)['password']
+        password1 = json.loads(request.body)['password1']
+        password2 = json.loads(request.body)['password2']
+        try:
+            user = User.objects.get(username=username)
+        except:
+            return JsonResponse({'status_code': 3, 'message': '没有这个用户哦'})
+        if user.password == hash_code(old_password):
+            if not re.match('^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,18}$', password1):
+                return JsonResponse({'status_code': 4, 'message': '密码不符合规范'})
+            if password1 != password2:
+                return JsonResponse({'status_code': 5, 'message': '两次输入的新密码不一致'})
+            user.password = hash_code(password1)
+            user.save()
+            return JsonResponse({'status_code': 1, 'message': '密码修改成功'})
+        else:
+            return JsonResponse({'status_code': 2, 'message': '密码错误!'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
+@csrf_exempt
 def user_confirm(request):
     if request.method == 'POST':
         code = json.loads(request.body)['code']
@@ -97,3 +123,32 @@ def user_confirm(request):
             confirm.delete()
             return JsonResponse({'status_code': 1})
     return JsonResponse({'status_code': -1})
+
+
+@csrf_exempt
+def get_userinfo(request):
+    if request.method == 'POST':
+        username = json.loads(request.body)['username']
+        try:
+            user = User.objects.get(username=username)
+            return JsonResponse(
+                {'status_code': 1, 'avatar': user.avatar, 'email': user.email, 'brief_intro': user.brief_intro})
+        except:
+            return JsonResponse({'status_code': 2, 'message': '查无此人'})
+    else:
+        return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
+@csrf_exempt
+def update_avatar(request):
+    if request.method == 'POST':
+        username = json.loads(request.body)['username']
+        avatar = json.loads(request.body)['avatar']
+        try:
+            user = User.objects.get(username=username)
+        except:
+            return JsonResponse({'status_code': 2, 'message': '查无此人!'})
+        user.avatar = avatar
+        user.save()
+        return JsonResponse({'status_code': 1, 'message': '头像更新成功！'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误！'})

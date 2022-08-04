@@ -7,6 +7,8 @@ class User(models.Model):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=256)
     has_confirmed = models.BooleanField(default=False)
+    avatar = models.CharField(max_length=1024, default='')
+    brief_intro = models.CharField(max_length=1024, default='')
 
     def __str__(self):
         return self.username
