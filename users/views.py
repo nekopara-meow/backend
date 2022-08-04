@@ -22,18 +22,18 @@ def register(request):
 
         same_name_user = User.objects.filter(username=username)
         if same_name_user:
-            return JsonResponse({'status_code': 2})
+            return JsonResponse({'status_code': 2, 'message': '用户名已存在!'})
 
         same_email_user = User.objects.filter(email=email)
         if same_email_user:
-            return JsonResponse({'status_code': 3})
+            return JsonResponse({'status_code': 3, 'message': '该邮箱已被注册!'})
 
             # 检测密码不符合规范：8-18，英文字母+数字
         if not re.match('^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,18}$', password1):
-            return JsonResponse({'status_code': 4})
+            return JsonResponse({'status_code': 4, 'message': '密码不符合规范!'})
 
         if password1 != password2:
-            return JsonResponse({'status_code': 5})
+            return JsonResponse({'status_code': 5, 'message': '两次输入密码不一致!'})
 
         # success
         new_user = User()
@@ -49,35 +49,30 @@ def register(request):
             send_email_confirm(email, code)
         except:
             new_user.delete()
-            return JsonResponse({'status_code': 6})
+            return JsonResponse({'status_code': 6, 'message': '验证邮件发送失败，请稍后再试!'})
 
-        return JsonResponse({'status_code': 1})
-    return JsonResponse({'status_code': -1})
+        return JsonResponse({'status_code': 1, 'message': '注册成功，一封验证邮件已经发到您的邮箱，请点击链接进行确认!'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
 
 
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
-        username = request.META.get('HTTP_USERNAME')
-        token = request.META.get('HTTP_AUTHORIZATION')
-        if username is not None and token is not None and check_token(username, token):
-            return JsonResponse({'status_code': 2})
-
         username = json.loads(request.body)['username']
         password = json.loads(request.body)['password']
         try:
             user = User.objects.get(username=username)
         except:
-            return JsonResponse({'status_code': 3})
+            return JsonResponse({'status_code': 3, 'message': '未查询到此用户!'})
 
         if user.password == hash_code(password):
             if not user.has_confirmed:
-                return JsonResponse({'status_code': 5})
+                return JsonResponse({'status_code': 5, 'message': '用户未确认，请前往邮箱确认!'})
             token = create_token(username)
-            return JsonResponse({'status_code': 1, 'username': username, 'token': token})
+            return JsonResponse({'status_code': 1, 'username': username, 'token': token, 'message': '登录成功!'})
         else:
-            return JsonResponse({'status_code': 4})
-    return JsonResponse({'status_code': -1})
+            return JsonResponse({'status_code': 4, 'message': '密码错误!'})
+    return JsonResponse({'status_code': -1,'message': '请求方式错误!'})
 
 
 @csrf_exempt
