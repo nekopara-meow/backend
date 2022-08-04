@@ -9,6 +9,10 @@ class User(models.Model):
     has_confirmed = models.BooleanField(default=False)
     avatar = models.CharField(max_length=1024, default='')
     brief_intro = models.CharField(max_length=1024, default='')
+    tel = models.CharField(max_length=18, default="")
+    gender = models.IntegerField(max_length=3, default=0)
+    nickname = models.CharField(max_length=128, default="")
+
 
     def __str__(self):
         return self.username
