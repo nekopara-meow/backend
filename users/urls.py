@@ -7,5 +7,6 @@ urlpatterns = [
     path('confirm/email', user_confirm),
     path('get_info', get_userinfo),
     path('change_password', change_password),
-    path('update/info', update_info)
+    path('update/info', update_info),
+    path('queryPriority', queryPriority),
 ]
