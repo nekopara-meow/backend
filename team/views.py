@@ -20,8 +20,6 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import re
 import pytz
-from rest_framework.decorators import api_view
-from django.core.cache import cache
 
 
 # Create your views here.
