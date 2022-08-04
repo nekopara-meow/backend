@@ -21,7 +21,7 @@ def send_email_confirm(email, code):
     text_content = '''感谢您的注册，这里是喵途论坛，专注于计算机系同学学习生活！\
                     如果你看到这条消息，说明你的邮箱服务器不提供HTML链接功能，请联系管理员！'''
     html_content = '''
-                       <p>感谢注册<a href="{}/confirm?code={}" target=blank>喵途论坛</a>，\
+                       <p>感谢注册<a href="{}/#/confirm?code={}" target=blank>喵途论坛</a>，\
                        这里是喵途论坛，专注于计算机系同学学习生活！</p>
                        <p>请点击站点链接完成注册确认！</p>
                        <p>此链接有效期为{}天！</p>
