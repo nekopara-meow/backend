@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from django.http import JsonResponse
@@ -6,21 +7,12 @@ from django.views.decorators.csrf import csrf_exempt
 from interact.models import Member_in_Team
 from team.models import Team
 from team.models import Uml
-from users.models import User
 
 import datetime
-from django.db.models import Q
-from django.shortcuts import render
-import random
 from users.models import User
-from django.conf import settings
 from django.http import JsonResponse
-from utils.token import create_token, check_token
 from django.views.decorators.csrf import csrf_exempt
 import json
-import re
-import pytz
-
 
 # Create your views here.
 

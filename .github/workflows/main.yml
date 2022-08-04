@@ -10,4 +10,4 @@ jobs:
 
     steps:
       - name: pull and reload on Aliyun
-        run: sshpass -p ${{secrets.ECS_PASSWORD}} ssh -o StrictHostKeyChecking=no couteau69586@${{secrets.ECS_IP}} "cd ~/backend; conda activate django; python kill.py; git pull --force; git checkout main; python run.py"
+        run: sshpass -p ${{secrets.ECS_PASSWORD}} ssh -o StrictHostKeyChecking=no couteau69586@${{secrets.ECS_IP}} "cd ~/backend; source /home/couteau69586/miniconda3/bin/activate /home/couteau69586/miniconda3/envs/django; pythpn kill.py; git pull; git checkout main; python run.py;"
