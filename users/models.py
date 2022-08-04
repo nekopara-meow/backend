@@ -10,7 +10,7 @@ class User(models.Model):
     avatar = models.CharField(max_length=1024, default='')
     brief_intro = models.CharField(max_length=1024, default='')
     tel = models.CharField(max_length=18, default="")
-    gender = models.IntegerField(max_length=3, default=0)
+    gender = models.IntegerField(default=0)
     nickname = models.CharField(max_length=128, default="")
 
 
