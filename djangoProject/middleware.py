@@ -7,7 +7,7 @@ except ImportError:
     MiddlewareMixin = object
 
 # 白名单，表示请求里面的路由时不验证登录信息
-API_WHITELIST = ["/api/users/login", "/api/users/register","/api/users/confirm/email"]
+API_WHITELIST = ["/api/users/login", "/api/users/register","/api/users/confirm/email","/api/users/get_info"]
 
 
 class AuthorizeMiddleware(MiddlewareMixin):
