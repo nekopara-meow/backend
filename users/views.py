@@ -42,6 +42,7 @@ def register(request):
         new_user.email = email
         new_user.brief_intro = '这个人很懒，什么也没写'
         new_user.avatar = 'https://miaotu-headers.oss-cn-hangzhou.aliyuncs.com/yonghutouxiang/Transparent_Akkarin.jpg'
+        new_user.nickname = username
         new_user.save()
 
         code = make_confirm_string(new_user)
@@ -72,7 +73,7 @@ def login(request):
             return JsonResponse({'status_code': 1, 'username': username, 'token': token, 'message': '登录成功!'})
         else:
             return JsonResponse({'status_code': 4, 'message': '密码错误!'})
-    return JsonResponse({'status_code': -1,'message': '请求方式错误!'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
 
 
 @csrf_exempt
@@ -128,7 +129,8 @@ def get_userinfo(request):
         try:
             user = User.objects.get(username=username)
             return JsonResponse(
-                {'status_code': 1, 'avatar': user.avatar, 'email': user.email, 'brief_intro': user.brief_intro})
+                {'status_code': 1, 'avatar': user.avatar, 'email': user.email, 'brief_intro': user.brief_intro,
+                 'nickname': user.nickname, 'gender': user.gender, 'tel': user.tel})
         except:
             return JsonResponse({'status_code': 2, 'message': '查无此人'})
     else:
@@ -136,15 +138,23 @@ def get_userinfo(request):
 
 
 @csrf_exempt
-def update_avatar(request):
+def update_info(request):
     if request.method == 'POST':
         username = json.loads(request.body)['username']
         avatar = json.loads(request.body)['avatar']
+        gender = json.loads(request.body)['gender']
+        tel = json.loads(request.body)['tel']
+        nickname = json.loads(request.body)['nickname']
+        brief_intro = json.loads(request.body)['brief_intro']
         try:
             user = User.objects.get(username=username)
         except:
             return JsonResponse({'status_code': 2, 'message': '查无此人!'})
         user.avatar = avatar
+        user.gender = gender
+        user.tel = tel
+        user.nickname = nickname
+        user.brief_intro = brief_intro
         user.save()
-        return JsonResponse({'status_code': 1, 'message': '头像更新成功！'})
+        return JsonResponse({'status_code': 1, 'message': '用户信息更新成功！'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误！'})
