@@ -1,7 +1,7 @@
 # Create your views here.
 import json
 import re
-
+from interact.models import Member_in_Team
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from pytz import utc
@@ -157,3 +157,13 @@ def update_info(request):
         user.save()
         return JsonResponse({'status_code': 1, 'message': '用户信息更新成功！'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误！'})
+
+@csrf_exempt
+def queryPriority(request):
+    username = json.loads(request.body)['username']
+    team_id = json.loads(request.body)['team_id']
+    mem = Member_in_Team.objects.get(username=username)
+    if mem is None:
+        return JsonResponse({'status_code': 2, 'msg': '该用户不在该团队内'})
+    else:
+        return JsonResponse({'status_code': 1, 'priority': mem.priority})
