@@ -123,6 +123,7 @@ def user_confirm(request):
 @csrf_exempt
 def get_userinfo(request):
     if request.method == 'POST':
+        print(request.body)
         username = json.loads(request.body)['username']
         try:
             user = User.objects.get(username=username)
