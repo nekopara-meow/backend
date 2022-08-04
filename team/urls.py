@@ -11,7 +11,8 @@ urlpatterns = [
     path('viewSomeonesTeams1', viewSomeonesTeams1),
     path('viewSomeonesTeams2', viewSomeonesTeams2),
     path('viewTeam', viewTeam),
-
-    path('uml/save', save_uml),
-    path('uml/load', load_uml)
+    path('viewProjectsInTeam', viewProjectsInTeam),
+    path('getUsersOfTeam', getUsersOfTeam),
+    path('getAdminsOfTeam', getAdminsOfTeam),
+    path('getCreatorOfTeam', getCreatorOfTeam),
 ]

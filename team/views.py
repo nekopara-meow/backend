@@ -7,12 +7,13 @@ from django.views.decorators.csrf import csrf_exempt
 from interact.models import Member_in_Team
 from team.models import Team
 from team.models import Uml
-
+from projects.models import Projectt
 import datetime
 from users.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+
 
 # Create your views here.
 
@@ -20,7 +21,7 @@ import json
 def establish(request):
     username = json.loads(request.body)['username']
     team_name = json.loads(request.body)['team_name']
-
+    brief_intro = json.loads(request.body)['brief_intro']
     # success
     new_team = Team()
     new_team.team_name = team_name
@@ -28,6 +29,7 @@ def establish(request):
     new_team.create_time = datetime.datetime.now()
     new_team.member_num = 1
     new_team.project_num = 0
+    new_team.brief_intro = brief_intro
     new_team.save()
 
     new_mem_in_team = Member_in_Team()
@@ -122,16 +124,16 @@ def viewSomeonesTeams0(request):
 
     return JsonResponse({'status_code': 1, 'ans_list': ans_list})
 
+
 @csrf_exempt
 def viewSomeonesTeams1(request):
     username = json.loads(request.body)['username']
     team_list = Member_in_Team.objects.filter(username=username, priority=1)
     ans_list = []
 
-
     for teams in team_list:
         team = Team.objects.get(team_id=teams.team_id)
-        a = {'team_id':team.team_id, 'team_name': team.team_name,
+        a = {'team_id': team.team_id, 'team_name': team.team_name,
              'creator': team.creator, 'team_avatar': team.avatar,
              'team_brief_intro': team.brief_intro,
              'create_time': team.create_time, 'member_num': team.member_num,
@@ -140,6 +142,7 @@ def viewSomeonesTeams1(request):
         ans_list.append(a)
 
     return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+
 
 @csrf_exempt
 def viewSomeonesTeams2(request):
@@ -148,7 +151,7 @@ def viewSomeonesTeams2(request):
     ans_list = []
     for teams in team_list:
         team = Team.objects.get(team_id=teams.team_id)
-        a = {'team_id':team.team_id, 'team_name': team.team_name,
+        a = {'team_id': team.team_id, 'team_name': team.team_name,
              'creator': team.creator, 'team_avatar': team.avatar,
              'team_brief_intro': team.brief_intro,
              'create_time': team.create_time, 'member_num': team.member_num,
@@ -156,6 +159,7 @@ def viewSomeonesTeams2(request):
              }
         ans_list.append(a)
     return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+
 
 @csrf_exempt
 def viewTeam(request):
@@ -168,33 +172,96 @@ def viewTeam(request):
 
 
 @csrf_exempt
-def save_uml(request):
-    if request.method == 'POST':
-        username = json.loads(request.body)['username']
-        team_id = json.loads(request.body)['team_id']
-        uml_url = json.loads(request.body)['uml_url']
-        new_uml = Uml()
-        new_uml.team_id = team_id
-        new_uml.uml_url = uml_url
-        new_uml.creator = username
-        try:
-            new_uml.save()
-            return JsonResponse({'status_code': 1})
-        except:
-            return JsonResponse({'status_code': 2})
-    else:
-        return JsonResponse({'status_code': -1})
+def viewProjectsInTeam(request):
+    team_id = json.loads(request.body)['team_id']
+    project_list = Projectt.objects.filter(team_id=team_id)
+    ans_list = []
+    for projects in project_list:
+        a = {'project_id': projects.project_id,
+             'project_name': projects.project_name,
+             'project_brief_intro': projects.brief_intro,
+             'project_create_time': projects.create_time
+             }
+        ans_list.append(a)
+    return JsonResponse({'status_code': 1, 'ans_list': ans_list})
 
 
 @csrf_exempt
-def load_uml(request):
-    if request.method == 'POST':
-        uml_id = json.loads(request.body)['uml_id']
-        try:
-            uml = Uml.objects.get(uml_id=uml_id)
-        except:
-            return JsonResponse({'status_code': 2})
-        uml_url = uml.uml_url
-        return JsonResponse({'status_code': 1, 'uml_url': uml_url})
+def getCreatorOfTeam(request):
+    team_id = json.loads(request.body)['team_id']
+    team = Team.objects.get(team_id=team_id)
+    if team is None:
+        return JsonResponse({'status_code': 2, 'msg': '该团队不存在'})
     else:
-        return JsonResponse({'status_code': -1})
+        user = User.objects.get(username=team.creator)
+        return JsonResponse({
+                                'status_code': 1, 'creator': team.creator,
+                                'avatar': user.avatar, 'brief_intro': user.brief_intro
+                             })
+@csrf_exempt
+def getAdminsOfTeam(request):
+    team_id = json.loads(request.body)['team_id']
+    team = Team.objects.get(team_id=team_id)
+    if team is None:
+        return JsonResponse({'status_code': 2, 'msg': '该团队不存在'})
+    else:
+        ans_list = []
+        member_list = Member_in_Team.objects.filter(team_id=team_id, priority=1)
+        for members in member_list:
+            user = User.objects.get(username=members.username)
+            a = ({
+                'username': user.username,
+                'avatar': user.avatar, 'brief_intro': user.brief_intro
+            })
+            ans_list.append(a)
+        return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+
+@csrf_exempt
+def getUsersOfTeam(request):
+    team_id = json.loads(request.body)['team_id']
+    team = Team.objects.get(team_id=team_id)
+    if team is None:
+        return JsonResponse({'status_code': 2, 'msg': '该团队不存在'})
+    else:
+        ans_list = []
+        member_list = Member_in_Team.objects.filter(team_id=team_id, priority=0)
+        for members in member_list:
+            user = User.objects.get(username=members.username)
+            a = ({
+                'username': user.username,
+                'avatar': user.avatar, 'brief_intro': user.brief_intro
+            })
+            ans_list.append(a)
+        return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+
+# @csrf_exempt
+# def save_uml(request):
+#     if request.method == 'POST':
+#         username = json.loads(request.body)['username']
+#         team_id = json.loads(request.body)['team_id']
+#         uml_url = json.loads(request.body)['uml_url']
+#         new_uml = Uml()
+#         new_uml.team_id = team_id
+#         new_uml.uml_url = uml_url
+#         new_uml.creator = username
+#         try:
+#             new_uml.save()
+#             return JsonResponse({'status_code': 1})
+#         except:
+#             return JsonResponse({'status_code': 2})
+#     else:
+#         return JsonResponse({'status_code': -1})
+#
+#
+# @csrf_exempt
+# def load_uml(request):
+#     if request.method == 'POST':
+#         uml_id = json.loads(request.body)['uml_id']
+#         try:
+#             uml = Uml.objects.get(uml_id=uml_id)
+#         except:
+#             return JsonResponse({'status_code': 2})
+#         uml_url = uml.uml_url
+#         return JsonResponse({'status_code': 1, 'uml_url': uml_url})
+#     else:
+#         return JsonResponse({'status_code': -1})
