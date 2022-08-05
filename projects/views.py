@@ -19,6 +19,7 @@ def clear(request):
 def establish(request):
     username = json.loads(request.body)['username']
     team_id = json.loads(request.body)['team_id']
+    project_name = json.loads(request.body)['project_name']
     brief_intro = json.loads(request.body)['brief_intro']
     already_in = Member_in_Team.objects.get(username=username, team_id=team_id)
     if already_in is None:
@@ -26,6 +27,7 @@ def establish(request):
     else:
         project = Projectt()
         project.team_id = team_id
+        project.project_name = project_name
         project.creator = username
         project.create_time = datetime.datetime.now()
         project.brief_intro = brief_intro
