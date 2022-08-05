@@ -110,8 +110,10 @@ def viewMembersInTeam(request):
 def viewSomeonesTeams0(request):
     username = json.loads(request.body)['username']
     team_list = Member_in_Team.objects.filter(username=username, priority=0)
-    ans_list = []
 
+    tmp = []
+    Team_Info = []
+    User_Info = []
     for teams in team_list:
         team = Team.objects.get(team_id=teams.team_id)
         a = {'team_id': team.team_id, 'team_name': team.team_name,
@@ -120,17 +122,29 @@ def viewSomeonesTeams0(request):
              'create_time': team.create_time, 'member_num': team.member_num,
              'project_num': team.project_num
              }
-        ans_list.append(a)
+        Team_Info.append(a)
+        member_list = Member_in_Team.objects.filter(team_id=team.team_id)
 
-    return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+        for members in member_list:
+            member = User.objects.get(username=members.username)
+            b = {'team_id':team.team_id, 'username': member.username, 'email': member.email,
+                 'priority': Member_in_Team.objects.get(username=members.username, team_id=team.team_id).priority,
+                 'avatar': member.avatar, 'brief_intro': member.brief_intro
+                 }
+            User_Info.append(b)
+        Dict = {"team_info": Team_Info, "user_info": User_Info}
+
+    return JsonResponse({'status_code': 1, 'Dict': Dict})
 
 
 @csrf_exempt
 def viewSomeonesTeams1(request):
     username = json.loads(request.body)['username']
     team_list = Member_in_Team.objects.filter(username=username, priority=1)
-    ans_list = []
 
+    tmp = []
+    Team_Info = []
+    User_Info = []
     for teams in team_list:
         team = Team.objects.get(team_id=teams.team_id)
         a = {'team_id': team.team_id, 'team_name': team.team_name,
@@ -139,16 +153,29 @@ def viewSomeonesTeams1(request):
              'create_time': team.create_time, 'member_num': team.member_num,
              'project_num': team.project_num
              }
-        ans_list.append(a)
+        Team_Info.append(a)
+        member_list = Member_in_Team.objects.filter(team_id=team.team_id)
 
-    return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+        for members in member_list:
+            member = User.objects.get(username=members.username)
+            b = {'team_id':team.team_id, 'username': member.username, 'email': member.email,
+                 'priority': Member_in_Team.objects.get(username=members.username, team_id=team.team_id).priority,
+                 'avatar': member.avatar, 'brief_intro': member.brief_intro
+                 }
+            User_Info.append(b)
+        Dict = {"team_info": Team_Info, "user_info": User_Info}
+
+    return JsonResponse({'status_code': 1, 'Dict': Dict})
 
 
 @csrf_exempt
 def viewSomeonesTeams2(request):
     username = json.loads(request.body)['username']
     team_list = Member_in_Team.objects.filter(username=username, priority=2)
-    ans_list = []
+
+    tmp = []
+    Team_Info = []
+    User_Info = []
     for teams in team_list:
         team = Team.objects.get(team_id=teams.team_id)
         a = {'team_id': team.team_id, 'team_name': team.team_name,
@@ -157,8 +184,19 @@ def viewSomeonesTeams2(request):
              'create_time': team.create_time, 'member_num': team.member_num,
              'project_num': team.project_num
              }
-        ans_list.append(a)
-    return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+        Team_Info.append(a)
+        member_list = Member_in_Team.objects.filter(team_id=team.team_id)
+
+        for members in member_list:
+            member = User.objects.get(username=members.username)
+            b = {'team_id':team.team_id, 'username': member.username, 'email': member.email,
+                 'priority': Member_in_Team.objects.get(username=members.username, team_id=team.team_id).priority,
+                 'avatar': member.avatar, 'brief_intro': member.brief_intro
+                 }
+            User_Info.append(b)
+        Dict = {"team_info": Team_Info, "user_info": User_Info}
+
+    return JsonResponse({'status_code': 1, 'Dict': Dict})
 
 
 @csrf_exempt
