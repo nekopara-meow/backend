@@ -195,7 +195,7 @@ def getCreatorOfTeam(request):
     else:
         user = User.objects.get(username=team.creator)
         return JsonResponse({
-                                'status_code': 1, 'creator': team.creator,
+                                'status_code': 1, 'creator': team.creator, 'nickname': user.nickname, 'email': user.email,
                                 'avatar': user.avatar, 'brief_intro': user.brief_intro
                              })
 @csrf_exempt
@@ -210,7 +210,7 @@ def getAdminsOfTeam(request):
         for members in member_list:
             user = User.objects.get(username=members.username)
             a = ({
-                'username': user.username,
+                'username': user.username, 'nickname': user.nickname, 'email': user.email,
                 'avatar': user.avatar, 'brief_intro': user.brief_intro
             })
             ans_list.append(a)
@@ -228,7 +228,7 @@ def getUsersOfTeam(request):
         for members in member_list:
             user = User.objects.get(username=members.username)
             a = ({
-                'username': user.username,
+                'username': user.username, 'nickname': user.nickname, 'email': user.email,
                 'avatar': user.avatar, 'brief_intro': user.brief_intro
             })
             ans_list.append(a)
