@@ -1,4 +1,3 @@
-
 from django.db import models
 import datetime
 
@@ -12,7 +11,9 @@ class Team(models.Model):
     create_time = models.DateTimeField(max_length=80, verbose_name="团队成立时间", auto_now_add=True)
     member_num = models.IntegerField(verbose_name="成员数", default=1)
     project_num = models.IntegerField(verbose_name="项目数", default=0)
-    avatar = models.CharField(max_length=255, default="https://miaotu-headers.oss-cn-hangzhou.aliyuncs.com/yonghutouxiang/Transparent_Akkarin.jpg")
+    avatar = models.CharField(max_length=255,
+                              default="https://miaotu-headers.oss-cn-hangzhou.aliyuncs.com/yonghutouxiang/Transparent_Akkarin.jpg")
+
 
 class Uml(models.Model):
     team_id = models.IntegerField

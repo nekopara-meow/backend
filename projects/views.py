@@ -7,6 +7,8 @@ from pytz import utc
 from projects.models import Projectt, File
 from interact.models import Member_in_Team
 import datetime
+
+
 # Create your views here.
 
 @csrf_exempt
@@ -14,6 +16,7 @@ def clear(request):
     pros = Projectt.objects.all()
     for projects in pros:
         projects.delete()
+
 
 @csrf_exempt
 def establish(request):
@@ -32,6 +35,7 @@ def establish(request):
         project.save()
         return JsonResponse({'status_code': 1, 'msg': "新建项目成功"})
 
+
 @csrf_exempt
 def delete(request):
     username = json.loads(request.body)['username']
@@ -43,6 +47,7 @@ def delete(request):
     else:
         project.delete()
         return JsonResponse({'status_code': 1, 'msg': "删除成功"})
+
 
 @csrf_exempt
 def rename(request):
@@ -56,6 +61,7 @@ def rename(request):
     else:
         project.project_name = new_name
         return JsonResponse({'status_code': 1, 'msg': "重命名成功"})
+
 
 @csrf_exempt
 def uploadFile(request):
@@ -78,6 +84,7 @@ def uploadFile(request):
         file.save()
         return JsonResponse({'status_code': 1, 'msg': "上传文件成功"})
 
+
 @csrf_exempt
 def viewFilesInProject(request):
     username = json.loads(request.body)['username']
@@ -97,6 +104,7 @@ def viewFilesInProject(request):
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+
 
 @csrf_exempt
 def viewUMLsInProject(request):
@@ -118,6 +126,7 @@ def viewUMLsInProject(request):
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
 
+
 @csrf_exempt
 def viewDesignsInProject(request):
     username = json.loads(request.body)['username']
@@ -138,6 +147,7 @@ def viewDesignsInProject(request):
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
 
+
 @csrf_exempt
 def viewTextsInProject(request):
     username = json.loads(request.body)['username']
@@ -157,3 +167,101 @@ def viewTextsInProject(request):
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+
+
+@csrf_exempt
+def loadXML(request):
+    if request.method == 'POST':
+        uml_id = json.loads(request.body)['uml_id']
+        file = File.objects.get(file_id=uml_id)
+        url = file.file_url
+        return JsonResponse({'status_code': 1, 'uml_url': url, 'message': '获取成功'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
+@csrf_exempt
+def saveXML(request):
+    if request.method == 'POST':
+        uml_id = json.loads(request.body)['uml_id']
+        uml_url = json.loads(request.body)['uml_url']
+
+        file = File.objects.get(file_id=uml_id)
+        file.file_url = uml_url
+        file.save()
+        return JsonResponse({'status_code': 1, 'message': '保存成功'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
+@csrf_exempt
+def newXML(request):
+    if request.method == 'POST':
+        file = File()
+        username = json.loads(request.body)['username']
+        project_id = json.loads(request.body)['project_id']
+        uml_name = json.loads(request.body)['uml_name']
+        file.file_name = uml_name
+        file.file_type = 0
+        file.project_id = project_id
+        file.creator = username
+        file.save()
+        return JsonResponse({'status_code': 1, 'uml_id': file.file_id, 'message': '新建成功'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
+@csrf_exempt
+def loadDOC(request):
+    if request.method == 'POST':
+        doc_id = json.loads(request.body)['doc_id']
+        file = File.objects.get(file_id=doc_id)
+        url = file.file_url
+        return JsonResponse({'status_code': 1, 'doc_url': url, 'message': '获取成功'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
+@csrf_exempt
+def saveDOC(request):
+    if request.method == 'POST':
+        doc_id = json.loads(request.body)['doc_id']
+        doc_url = json.loads(request.body)['doc_url']
+
+        file = File.objects.get(file_id=doc_id)
+        file.file_url = doc_url
+        file.save()
+        return JsonResponse({'status_code': 1, 'message': '保存成功'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
+@csrf_exempt
+def newDOC(request):
+    if request.method == 'POST':
+        file = File()
+        username = json.loads(request.body)['username']
+        project_id = json.loads(request.body)['project_id']
+        doc_name = json.loads(request.body)['doc_name']
+        file.file_name = doc_name
+        file.file_type = 0
+        file.project_id = project_id
+        file.creator = username
+        file.save()
+        return JsonResponse({'status_code': 1, 'doc_id': file.file_id, 'message': '新建成功'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
+@csrf_exempt
+def deleteXML(request):
+    if request.method == 'POST':
+        uml_id = json.loads(request.body)['uml_id']
+        file = File.objects.get(file_id=uml_id)
+        file.delete()
+        return JsonResponse({'status_code': 1, 'message': '删除成功!'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
+@csrf_exempt
+def deleteDOC(request):
+    if request.method == 'POST':
+        doc_id = json.loads(request.body)['doc_id']
+        file = File.objects.get(file_id=doc_id)
+        file.delete()
+        return JsonResponse({'status_code': 1, 'message': '删除成功!'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})

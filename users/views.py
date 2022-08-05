@@ -42,7 +42,6 @@ def register(request):
         new_user.email = email
         new_user.brief_intro = '这个人很懒，什么也没写'
         new_user.avatar = 'https://miaotu-headers.oss-cn-hangzhou.aliyuncs.com/yonghutouxiang/Transparent_Akkarin.jpg'
-        new_user.nickname = username
         new_user.save()
 
         code = make_confirm_string(new_user)

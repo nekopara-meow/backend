@@ -20,5 +20,5 @@ class File(models.Model):
     file_type = models.IntegerField(verbose_name="文件种类")
     creator = models.CharField(max_length=128)
     file_id = models.AutoField(primary_key=True)
-    file_content = models.CharField(max_length=1024)
+    file_url = models.CharField(max_length=1024)
 
