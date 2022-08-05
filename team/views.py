@@ -132,8 +132,7 @@ def viewSomeonesTeams0(request):
                  'avatar': member.avatar, 'brief_intro': member.brief_intro
                  }
             User_Info.append(b)
-        Dict = {"team_info": Team_Info, "user_info": User_Info}
-
+    Dict = {"team_info": Team_Info, "user_info": User_Info}
     return JsonResponse({'status_code': 1, 'Dict': Dict})
 
 
