@@ -198,6 +198,7 @@ def saveXML(request):
 def newXML(request):
     if request.method == 'POST':
         file = File()
+        print(json.loads(request.body))
         username = json.loads(request.body)['username']
         project_id = json.loads(request.body)['project_id']
         uml_name = json.loads(request.body)['uml_name']
