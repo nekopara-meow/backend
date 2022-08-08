@@ -235,7 +235,7 @@ def newDOC(request):
         project_id = json.loads(request.body)['project_id']
         doc_name = json.loads(request.body)['doc_name']
         file.file_name = doc_name
-        file.file_type = 0
+        file.file_type = 1
         file.project_id = project_id
         file.creator = username
         file.save()
