@@ -81,6 +81,7 @@ def uploadFile(request):
         file.file_type = file_type
         file.project_id = project_id
         file.creator = username
+        file.update_time = datetime.datetime.now()
         file.save()
         return JsonResponse({'status_code': 1, 'msg': "上传文件成功"})
 
@@ -100,6 +101,8 @@ def viewFilesInProject(request):
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
+                'file_name': files.file_name, 'file_content': files.file_url,
+                'update_time': files.update_time,
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -120,7 +123,8 @@ def viewUMLsInProject(request):
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
-                'file_name': files.file_name, 'file_content': files.file_url
+                'file_name': files.file_name, 'file_content': files.file_url,
+                'update_time': files.update_time,
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -141,7 +145,8 @@ def viewDesignsInProject(request):
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
-                'file_name': files.file_name, 'file_content': files.file_url
+                'file_name': files.file_name, 'file_content': files.file_url,
+                'update_time': files.update_time,
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -162,7 +167,8 @@ def viewTextsInProject(request):
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
-                'file_name': files.file_name, 'file_content': files.file_url
+                'file_name': files.file_name, 'file_content': files.file_url,
+                'update_time': files.update_time,
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -186,6 +192,7 @@ def saveXML(request):
 
         file = File.objects.get(file_id=uml_id)
         file.file_url = uml_url
+        file.update_time = datetime.datetime.now()
         file.save()
         return JsonResponse({'status_code': 1, 'message': '保存成功'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
@@ -225,6 +232,7 @@ def saveDOC(request):
 
         file = File.objects.get(file_id=doc_id)
         file.file_url = doc_url
+        file.update_time = datetime.datetime.now()
         file.save()
         return JsonResponse({'status_code': 1, 'message': '保存成功'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
@@ -263,6 +271,7 @@ def rename_file_by_id(request):
         new_name = json.loads(request.body)['new_file_name']
         file = File.objects.get(file_id=file_id)
         file.file_name = new_name
+        file.update_time = datetime.datetime.now()
         file.save()
         return JsonResponse({'status_code': 1, 'message': '重命名成功！'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
