@@ -250,20 +250,22 @@ def newDOC(request):
 
 
 @csrf_exempt
-def deleteXML(request):
+def del_file_by_id(request):
     if request.method == 'POST':
-        uml_id = json.loads(request.body)['uml_id']
-        file = File.objects.get(file_id=uml_id)
+        file_id = json.loads(request.body)['file_id']
+        file = File.objects.get(file_id=file_id)
         file.delete()
         return JsonResponse({'status_code': 1, 'message': '删除成功!'})
-    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
 
 
 @csrf_exempt
-def deleteDOC(request):
+def rename_file_by_id(request):
     if request.method == 'POST':
-        doc_id = json.loads(request.body)['doc_id']
-        file = File.objects.get(file_id=doc_id)
-        file.delete()
-        return JsonResponse({'status_code': 1, 'message': '删除成功!'})
+        file_id = json.loads(request.body)['file_id']
+        new_name = json.loads(request.bode)['new_file_name']
+        file = File.objects.get(file_id=file_id)
+        file.file_name = new_name
+        file.save()
+        return JsonResponse({'status_code': 1, 'message': '重命名成功！'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})

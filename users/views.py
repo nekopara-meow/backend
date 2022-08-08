@@ -28,7 +28,7 @@ def register(request):
         if same_email_user:
             return JsonResponse({'status_code': 3, 'message': '该邮箱已被注册!'})
 
-            # 检测密码不符合规范：8-18，英文字母+数字
+        # 检测密码不符合规范：8-18，英文字母+数字
         if not re.match('^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,18}$', password1):
             return JsonResponse({'status_code': 4, 'message': '密码不符合规范!'})
 
@@ -156,6 +156,7 @@ def update_info(request):
         user.save()
         return JsonResponse({'status_code': 1, 'message': '用户信息更新成功！'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误！'})
+
 
 @csrf_exempt
 def queryPriority(request):
