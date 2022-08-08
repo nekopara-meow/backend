@@ -50,7 +50,7 @@ def invite(request):
     already_in = Member_in_Team.objects.filter(username=invitee_username, team_id=team_id)
     if already_in:
         return JsonResponse({'status_code': 2, 'msg': "Invitee has been already in the team"})
-    if Member_in_Team.objects.get(usernam=inviter.username, team_id=team_id).priority < 1:
+    if Member_in_Team.objects.get(username=inviter.username, team_id=team_id).priority < 1:
         return JsonResponse({'status_code': 3, 'msg': "Inviter doesn't have the priority"})
 
     new_mem_in_team = Member_in_Team()
