@@ -74,6 +74,7 @@ def setAdmins(request):
     if Member_in_Team.objects.get(username=setter.username, team_id=team_id).priority < 2:
         return JsonResponse({'status_code': 3, 'msg': "Setter doesn't have the priority"})
     settee.priority = 1
+    settee.save()
     return JsonResponse({'status_code': 1, 'msg': "Set success"})
 
 
