@@ -71,7 +71,6 @@ def uploadFile(request):
     file_name = json.loads(request.body)['file_name']
     project_id = json.loads(request.body)['project_id']
     file_type = json.loads(request.body)['file_type']
-    file_content = json.loads(request.body)['file_content']
     project = Projectt.objects.get(project_id=project_id)
     already_in = Member_in_Team.objects.filter(username=username, team_id=project.team_id)
     if already_in is None:
@@ -80,7 +79,6 @@ def uploadFile(request):
         file = File()
         file.file_name = file_name
         file.file_type = file_type
-        file.file_content = file_content
         file.project_id = project_id
         file.creator = username
         file.save()
@@ -102,7 +100,6 @@ def viewFilesInProject(request):
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
-                'file_content': files.file_content
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -123,7 +120,6 @@ def viewUMLsInProject(request):
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
-                'file_content': files.file_content
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -144,7 +140,6 @@ def viewDesignsInProject(request):
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
-                'file_content': files.file_content
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -165,7 +160,6 @@ def viewTextsInProject(request):
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
-                'file_content': files.file_content
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -198,7 +192,6 @@ def saveXML(request):
 def newXML(request):
     if request.method == 'POST':
         file = File()
-        print(json.loads(request.body))
         username = json.loads(request.body)['username']
         project_id = json.loads(request.body)['project_id']
         uml_name = json.loads(request.body)['uml_name']
