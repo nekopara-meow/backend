@@ -66,8 +66,8 @@ def setAdmins(request):
     setter_username = json.loads(request.body)['setter']  # 设置人
     settee_username = json.loads(request.body)['settee']  # 被设置人
     team_id = json.loads(request.body)['team_id']
-    setter = User.objects.get(username=setter_username)
-    settee = User.objects.get(username=settee_username)
+    setter = Member_in_Team.objects.get(username=setter_username,team_id=team_id)
+    settee = Member_in_Team.objects.get(username=settee_username,team_id=team_id)
     already_in = Member_in_Team.objects.filter(username=settee_username, team_id=team_id, priority=1)
     if already_in:
         return JsonResponse({'status_code': 2, 'msg': "Has already been admin"})
