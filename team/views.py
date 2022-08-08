@@ -46,8 +46,8 @@ def invite(request):
     invitee_username = json.loads(request.body)['invitee']  # 被邀请人
     team_id = json.loads(request.body)['team_id']
     inviter = User.objects.get(username=inviter_username)
-    invitee = User.objects.get(username=invitee_username)
-    already_in = Member_in_Team.objects.get(username=invitee_username, team_id=team_id)
+    # invitee = User.objects.get(username=invitee_username)
+    already_in = Member_in_Team.objects.filter(username=invitee_username, team_id=team_id)
     if already_in:
         return JsonResponse({'status_code': 2, 'msg': "Invitee has been already in the team"})
     if Member_in_Team.objects.get(usernam=inviter.username, team_id=team_id).priority < 1:
@@ -127,7 +127,7 @@ def viewSomeonesTeams0(request):
 
         for members in member_list:
             member = User.objects.get(username=members.username)
-            b = {'team_id':team.team_id, 'username': member.username, 'email': member.email,
+            b = {'team_id': team.team_id, 'username': member.username, 'email': member.email,
                  'priority': Member_in_Team.objects.get(username=members.username, team_id=team.team_id).priority,
                  'avatar': member.avatar, 'brief_intro': member.brief_intro
                  }
@@ -157,7 +157,7 @@ def viewSomeonesTeams1(request):
 
         for members in member_list:
             member = User.objects.get(username=members.username)
-            b = {'team_id':team.team_id, 'username': member.username, 'email': member.email,
+            b = {'team_id': team.team_id, 'username': member.username, 'email': member.email,
                  'priority': Member_in_Team.objects.get(username=members.username, team_id=team.team_id).priority,
                  'avatar': member.avatar, 'brief_intro': member.brief_intro
                  }
@@ -188,7 +188,7 @@ def viewSomeonesTeams2(request):
 
         for members in member_list:
             member = User.objects.get(username=members.username)
-            b = {'team_id':team.team_id, 'username': member.username, 'email': member.email,
+            b = {'team_id': team.team_id, 'username': member.username, 'email': member.email,
                  'priority': Member_in_Team.objects.get(username=members.username, team_id=team.team_id).priority,
                  'avatar': member.avatar, 'brief_intro': member.brief_intro
                  }
@@ -232,9 +232,11 @@ def getCreatorOfTeam(request):
     else:
         user = User.objects.get(username=team.creator)
         return JsonResponse({
-                                'status_code': 1, 'creator': team.creator, 'nickname': user.nickname, 'email': user.email,
-                                'avatar': user.avatar, 'brief_intro': user.brief_intro
-                             })
+            'status_code': 1, 'creator': team.creator, 'nickname': user.nickname, 'email': user.email,
+            'avatar': user.avatar, 'brief_intro': user.brief_intro
+        })
+
+
 @csrf_exempt
 def getAdminsOfTeam(request):
     team_id = json.loads(request.body)['team_id']
@@ -252,6 +254,7 @@ def getAdminsOfTeam(request):
             })
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+
 
 @csrf_exempt
 def getUsersOfTeam(request):
