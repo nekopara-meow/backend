@@ -260,7 +260,7 @@ def del_file_by_id(request):
 def rename_file_by_id(request):
     if request.method == 'POST':
         file_id = json.loads(request.body)['file_id']
-        new_name = json.loads(request.bode)['new_file_name']
+        new_name = json.loads(request.body)['new_file_name']
         file = File.objects.get(file_id=file_id)
         file.file_name = new_name
         file.save()
