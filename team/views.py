@@ -66,14 +66,15 @@ def setAdmins(request):
     setter_username = json.loads(request.body)['setter']  # 设置人
     settee_username = json.loads(request.body)['settee']  # 被设置人
     team_id = json.loads(request.body)['team_id']
-    setter = User.objects.get(username=setter_username)
-    settee = User.objects.get(username=settee_username)
-    already_in = Member_in_Team.objects.get(username=settee_username, team_id=team_id, priority=1)
+    setter = Member_in_Team.objects.get(username=setter_username,team_id=team_id)
+    settee = Member_in_Team.objects.get(username=settee_username,team_id=team_id)
+    already_in = Member_in_Team.objects.filter(username=settee_username, team_id=team_id, priority=1)
     if already_in:
         return JsonResponse({'status_code': 2, 'msg': "Has already been admin"})
-    if Member_in_Team.objects.get(usernam=setter.username, team_id=team_id).priority < 2:
+    if Member_in_Team.objects.get(username=setter.username, team_id=team_id).priority < 2:
         return JsonResponse({'status_code': 3, 'msg': "Setter doesn't have the priority"})
     settee.priority = 1
+    settee.save()
     return JsonResponse({'status_code': 1, 'msg': "Set success"})
 
 
@@ -89,6 +90,7 @@ def deleteMem(request):
 
     # delete successfully
     Member_in_Team.objects.get(username=deletee_username, team_id=team_id).delete()
+    return JsonResponse({'status_code': 1, 'msg': "删除成功!"})
 
 
 @csrf_exempt
