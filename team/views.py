@@ -89,6 +89,7 @@ def deleteMem(request):
 
     # delete successfully
     Member_in_Team.objects.get(username=deletee_username, team_id=team_id).delete()
+    return JsonResponse({'status_code': 1, 'msg': "删除成功!"})
 
 
 @csrf_exempt
