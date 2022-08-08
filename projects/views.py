@@ -92,7 +92,7 @@ def viewFilesInProject(request):
     username = json.loads(request.body)['username']
     project_id = json.loads(request.body)['project_id']
     project = Projectt.objects.get(project_id=project_id)
-    already_in = Member_in_Team.objects.get(username=username, team_id=project.team_id)
+    already_in = Member_in_Team.objects.filter(username=username, team_id=project.team_id)
     if already_in is None:
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
@@ -113,7 +113,7 @@ def viewUMLsInProject(request):
     username = json.loads(request.body)['username']
     project_id = json.loads(request.body)['project_id']
     project = Projectt.objects.get(project_id=project_id)
-    already_in = Member_in_Team.objects.get(username=username, team_id=project.team_id)
+    already_in = Member_in_Team.objects.filter(username=username, team_id=project.team_id)
     if already_in is None:
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
