@@ -24,7 +24,7 @@ def establish(request):
     team_id = json.loads(request.body)['team_id']
     project_name = json.loads(request.body)['project_name']
     brief_intro = json.loads(request.body)['brief_intro']
-    already_in = Member_in_Team.objects.get(username=username, team_id=team_id)
+    already_in = Member_in_Team.objects.filter(username=username, team_id=team_id)
     if already_in is None:
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
@@ -43,7 +43,7 @@ def delete(request):
     username = json.loads(request.body)['username']
     project_id = json.loads(request.body)['project_id']
     project = Projectt.objects.get(project_id=project_id)
-    already_in = Member_in_Team.objects.get(username=username, team_id=project.team_id)
+    already_in = Member_in_Team.objects.filter(username=username, team_id=project.team_id)
     if already_in is None:
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
@@ -57,7 +57,7 @@ def rename(request):
     project_id = json.loads(request.body)['project_id']
     new_name = json.loads(request.body)['new_name']
     project = Projectt.objects.get(project_id=project_id)
-    already_in = Member_in_Team.objects.get(username=username, team_id=project.team_id)
+    already_in = Member_in_Team.objects.filter(username=username, team_id=project.team_id)
     if already_in is None:
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
@@ -73,7 +73,7 @@ def uploadFile(request):
     file_type = json.loads(request.body)['file_type']
     file_content = json.loads(request.body)['file_content']
     project = Projectt.objects.get(project_id=project_id)
-    already_in = Member_in_Team.objects.get(username=username, team_id=project.team_id)
+    already_in = Member_in_Team.objects.filter(username=username, team_id=project.team_id)
     if already_in is None:
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
@@ -134,7 +134,7 @@ def viewDesignsInProject(request):
     username = json.loads(request.body)['username']
     project_id = json.loads(request.body)['project_id']
     project = Projectt.objects.get(project_id=project_id)
-    already_in = Member_in_Team.objects.get(username=username, team_id=project.team_id)
+    already_in = Member_in_Team.objects.filter(username=username, team_id=project.team_id)
     if already_in is None:
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
@@ -155,7 +155,7 @@ def viewTextsInProject(request):
     username = json.loads(request.body)['username']
     project_id = json.loads(request.body)['project_id']
     project = Projectt.objects.get(project_id=project_id)
-    already_in = Member_in_Team.objects.get(username=username, team_id=project.team_id)
+    already_in = Member_in_Team.objects.filter(username=username, team_id=project.team_id)
     if already_in is None:
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
