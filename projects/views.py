@@ -120,6 +120,7 @@ def viewUMLsInProject(request):
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
+                'file_name': files.file_name, 'file_content': files.file_url
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -135,11 +136,12 @@ def viewDesignsInProject(request):
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
         ans_list = []
-        file_list = File.objects.filter(project_id=project_id, file_type=1)
+        file_list = File.objects.filter(project_id=project_id, file_type=2)
         for files in file_list:
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
+                'file_name': files.file_name, 'file_content': files.file_url
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -155,11 +157,12 @@ def viewTextsInProject(request):
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
         ans_list = []
-        file_list = File.objects.filter(project_id=project_id, file_type=2)
+        file_list = File.objects.filter(project_id=project_id, file_type=1)
         for files in file_list:
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
+                'file_name': files.file_name, 'file_content': files.file_url
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
