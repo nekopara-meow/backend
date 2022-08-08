@@ -17,6 +17,6 @@ urlpatterns = [
     path('new/doc', newDOC),
     path('save/xml', saveXML),
     path('save/doc', saveDOC),
-    path('delete', del_file_by_id),
-    path('rename', rename_file_by_id)
+    path('delete/file', del_file_by_id),
+    path('rename/file', rename_file_by_id)
 ]
