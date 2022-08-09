@@ -18,7 +18,7 @@ class PersonalMessage(models.Model):
     sender = models.CharField(max_length=128, verbose_name="发送/操作者username")
     receiver = models.CharField(max_length=128, verbose_name="接收者username")
     team_id = models.IntegerField(verbose_name="团队ID")
-    project_id = models.IntegerField(verbose_name="项目ID")
+    project_id = models.IntegerField(verbose_name="项目ID", null=True)
     send_time = models.DateTimeField(max_length=80, verbose_name="消息发送时间", auto_now_add=True)
     message_type = models.IntegerField(verbose_name="信息种类")
     message_id = models.AutoField(primary_key=True)
@@ -27,21 +27,24 @@ class PersonalMessage(models.Model):
 
 class TeamMessage(models.Model):
     team_id = models.IntegerField(verbose_name="团队ID")
-    project_id = models.IntegerField(verbose_name="项目ID")
+    project_id = models.IntegerField(verbose_name="项目ID", null=True)
     sender = models.CharField(max_length=128, verbose_name="发送/操作者username")
-    receiver = models.CharField(max_length=128, verbose_name="接收者username")
+    receiver = models.CharField(max_length=128, verbose_name="接收者username", null=True)
     send_time = models.DateTimeField(max_length=80, verbose_name="消息发送时间", auto_now_add=True)
     message_type = models.IntegerField(verbose_name="信息种类")
     message_id = models.AutoField(primary_key=True)
+    delete_project_name = models.CharField(max_length=128, verbose_name="被删除项目名", null=True)
+
 # x邀请y加入团队，x把y踢出团队，x把y设为管理，x撤销y的管理，x新建项目，x删除项目
 
 
 class ProjectMessage(models.Model):
-    team_id = models.IntegerField(verbose_name="团队ID")
+    team_id = models.IntegerField(verbose_name="团队ID", null=True)
     project_id = models.IntegerField(verbose_name="项目ID")
     file_id = models.IntegerField(verbose_name="文件ID")
     username = models.CharField(max_length=128, verbose_name="操作者username")
     send_time = models.DateTimeField(max_length=80, verbose_name="消息发送时间", auto_now_add=True)
     message_type = models.IntegerField(verbose_name="信息种类")
     message_id = models.AutoField(primary_key=True)
+    delete_file_name = models.CharField(max_length=128, verbose_name="被删除文件名", null=True)
 # x新建了文件y，x删除了文件y，x开放文件y的预览，x关闭文件y的预览
