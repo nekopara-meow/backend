@@ -287,7 +287,7 @@ def rename_file_by_id(request):
 def get_projects_by_user(request):
     if request.method == 'POST':
         username = json.loads(request.body)['username']
-        teams = Member_in_Team.objects.filter(username=username).values('team_id')
+        teams = Member_in_Team.objects.filter(username=username)
         team_projects = []
         project_infos = []
         if teams:
@@ -327,7 +327,7 @@ def get_files_by_project(request):
 def get_files_by_user(request):
     if request.method == 'POST':
         username = json.loads(request.body)['username']
-        teams = Member_in_Team.objects.filter(username=username).values('team_id')
+        teams = Member_in_Team.objects.filter(username=username)
         file_infos = []
         project_files = []
         team_projects = []
