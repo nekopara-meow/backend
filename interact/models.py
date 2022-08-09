@@ -12,6 +12,11 @@ class Member_in_Team(models.Model):
     team_id = models.IntegerField(verbose_name="团队ID")
     priority = models.IntegerField(verbose_name="该成员在该项目中权限等级")
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['username'], name='username_index')
+        ]
+
 
 class PersonalMessage(models.Model):
     sender = models.CharField(max_length=128, verbose_name="发送/操作者username")
@@ -20,6 +25,7 @@ class PersonalMessage(models.Model):
     project_id = models.IntegerField(verbose_name="项目ID")
     send_time = models.DateTimeField(max_length=80, verbose_name="消息发送时间", auto_now_add=True)
     message_type = models.IntegerField(verbose_name="信息种类")
+
 
 class TeamMessage(models.Model):
     team_id = models.IntegerField(verbose_name="团队ID")
@@ -37,4 +43,3 @@ class ProjectMessage(models.Model):
     username = models.CharField(max_length=128, verbose_name="操作者username")
     send_time = models.DateTimeField(max_length=80, verbose_name="消息发送时间", auto_now_add=True)
     message_type = models.IntegerField(verbose_name="信息种类")
-

@@ -20,6 +20,11 @@ class Projectt(models.Model):
     text_num = models.IntegerField(verbose_name="项目内文档文件个数", default=0)
     deleted = models.BooleanField(verbose_name="是否已被放入回收站", default=False)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['team_id'])
+        ]
+
 
 class ProjectBin(models.Model):
     team_id = models.IntegerField(verbose_name="团队ID")
@@ -38,6 +43,13 @@ class File(models.Model):
     update_time = models.DateTimeField(auto_now_add=True)
     deleted = models.BooleanField(verbose_name="是否已被放入回收站", default=False)
     display = models.BooleanField(verbose_name="是否对所有人开放预览", default=False)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['project_id']),
+            models.Index(fields=['project_id', 'creator']),
+            models.Index(fields=['project_id', 'file_type'])
+        ]
 
 
 class FileBin(models.Model):
