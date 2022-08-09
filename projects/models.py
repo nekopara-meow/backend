@@ -39,6 +39,7 @@ class File(models.Model):
     creator = models.CharField(max_length=128)
     file_id = models.AutoField(primary_key=True)
     file_url = models.CharField(max_length=1024)
+    name_url = models.CharField(max_length=1024)
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now_add=True)
     deleted = models.BooleanField(verbose_name="是否已被放入回收站", default=False)

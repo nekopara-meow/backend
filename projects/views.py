@@ -260,6 +260,49 @@ def newDOC(request):
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
 
 
+
+@csrf_exempt
+def load_axure(request):
+    if request.method == 'POST':
+        doc_id = json.loads(request.body)['axure_id']
+        file = File.objects.get(file_id=doc_id)
+        url = file.file_url
+        url2 = file.name_url
+        return JsonResponse({'status_code': 1, 'axure_url': url, 'name_url': url2,'message': '获取成功'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
+@csrf_exempt
+def save_axure(request):
+    if request.method == 'POST':
+        axure_id = json.loads(request.body)['axure_id']
+        axure_url = json.loads(request.body)['axure_url']
+        name_url = json.loads(request.body)['name_url']
+        file = File.objects.get(file_id=axure_id)
+        file.file_url = axure_url
+        file.name_url = name_url
+        file.update_time = datetime.datetime.now()
+        file.save()
+        return JsonResponse({'status_code': 1, 'message': '保存成功'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
+@csrf_exempt
+def new_axure(request):
+    if request.method == 'POST':
+        file = File()
+        username = json.loads(request.body)['username']
+        project_id = json.loads(request.body)['project_id']
+        axure_name = json.loads(request.body)['axure_name']
+        file.file_name = axure_name
+        file.file_type = DSN
+        file.project_id = project_id
+        file.creator = username
+        file.save()
+        return JsonResponse({'status_code': 1, 'doc_id': file.file_id, 'message': '新建成功'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
 @csrf_exempt
 def del_file_by_id(request):
     if request.method == 'POST':
@@ -337,7 +380,7 @@ def get_files_by_user(request):
                 projects = Projectt.objects.filter(team_id=team_id)
                 if projects:
                     for project in projects:
-                        files = File.objects.filter(project_id=project.project_id)
+                        files = File.objects.filter(project_id=project.project_id, file_type=DOC)
                         if files:
                             for file in files:
                                 file_info = {
@@ -368,7 +411,7 @@ def get_files_by_creator(request):
                 projects = Projectt.objects.filter(team_id=team_id)
                 if projects:
                     for project in projects:
-                        files = File.objects.filter(project_id=project.project_id,creator=creator)
+                        files = File.objects.filter(project_id=project.project_id, creator=creator, file_type=DOC)
                         if files:
                             for file in files:
                                 file_info = {
