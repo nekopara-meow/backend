@@ -220,7 +220,11 @@ def viewTeam(request):
 @csrf_exempt
 def viewProjectsInTeam(request):
     team_id = json.loads(request.body)['team_id']
-    project_list = Projectt.objects.filter(team_id=team_id)
+    if 'deleted' in json.loads(request.body):
+        deleted = True
+    else:
+        deleted = False
+    project_list = Projectt.objects.filter(team_id=team_id,deleted=deleted)
     ans_list = []
     for projects in project_list:
         a = {'project_id': projects.project_id,
