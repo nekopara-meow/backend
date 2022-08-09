@@ -3,8 +3,8 @@ from .views import *
 
 urlpatterns = [
     path('establish', establish),
-    path('delete', delete),
-    path('rename', rename),
+    path('delete/project', delete),
+    path('rename/project', rename),
     path('uploadFile', uploadFile),
     path('viewFilesInProject', viewFilesInProject),
     path('viewUMLsInProject', viewUMLsInProject),
@@ -25,5 +25,10 @@ urlpatterns = [
     path('getfiles/byproject', get_files_by_project),
     path('getfiles/byuser',get_files_by_user),
     path('getfiles/bycreator',get_files_by_creator),
-    path('getprojects/byuser',get_projects_by_user)
+    path('getprojects/byuser',get_projects_by_user),
+    path('bindelete/file', completely_delete_file_by_id),
+    path('bindelete/project', completely_delete_project_by_id),
+    path('recover/file', recover_file_by_id),
+    path('recover/project', recover_project_by_id),
+    path('updateprojectinfo', update_project_info),
 ]

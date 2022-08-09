@@ -288,7 +288,11 @@ def viewTeam(request):
 @csrf_exempt
 def viewProjectsInTeam(request):
     team_id = json.loads(request.body)['team_id']
-    project_list = Projectt.objects.filter(team_id=team_id)
+    if 'deleted' in json.loads(request.body):
+        deleted = True
+    else:
+        deleted = False
+    project_list = Projectt.objects.filter(team_id=team_id,deleted=deleted)
     ans_list = []
     for projects in project_list:
         a = {'project_id': projects.project_id,
@@ -391,4 +395,17 @@ def copy_project(request):
         return JsonResponse({'status_code': 1,'message': '复制成功!', 'new_project_id':new_project.project_id})
     return JsonResponse({'status_code': -1,'message': '请求方式错误!'})
 
-
+@csrf_exempt
+def getAllAvatarsOfTeam(request):
+    if request.method == 'POST':
+        team_id = json.loads(request.body)['team_id']
+        ans_list = []
+        member_list = Member_in_Team.objects.filter(team_id=team_id)
+        for members in member_list:
+            a = {
+                'username': members.username,
+                'avatar': User.objects.get(username=members.username).avatar
+            }
+            ans_list.append(a)
+        return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
