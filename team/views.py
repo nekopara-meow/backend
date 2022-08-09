@@ -4,7 +4,7 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from interact.models import Member_in_Team
+from interact.models import Member_in_Team, PersonalMessage
 from team.models import Team
 from team.models import Uml
 from projects.models import Projectt
@@ -53,11 +53,18 @@ def invite(request):
     if Member_in_Team.objects.get(username=inviter.username, team_id=team_id).priority < 1:
         return JsonResponse({'status_code': 3, 'msg': "Inviter doesn't have the priority"})
 
-    new_mem_in_team = Member_in_Team()
-    new_mem_in_team.username = invitee_username
-    new_mem_in_team.team_id = team_id
-    new_mem_in_team.priority = 0
-    new_mem_in_team.save()
+    new_message = PersonalMessage()
+    new_message.message_type = 1
+    new_message.team_id = team_id
+
+    new_message.sender = inviter_username
+    new_message.receiver = invitee_username
+    new_message.save()
+    # new_mem_in_team = Member_in_Team()
+    # new_mem_in_team.username = invitee_username
+    # new_mem_in_team.team_id = team_id
+    # new_mem_in_team.priority = 0
+    # new_mem_in_team.save()
     return JsonResponse({'status_code': 1, 'msg': "Invite success"})
 
 
