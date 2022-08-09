@@ -16,5 +16,6 @@ urlpatterns = [
     path('getAdminsOfTeam', getAdminsOfTeam),
     path('getCreatorOfTeam', getCreatorOfTeam),
     path('updateteaminfo', update_team_info),
-    path('copyproject', copy_project)
+    path('copyproject', copy_project),
+    path('deleteAdmins', deleteAdmins),
 ]

@@ -13,11 +13,11 @@ from users.models import User
 
 # PersonalMessage里type为0是被踢出团队 1是邀请加入团队 2是被设为管理员 3是被取消管理员
 
-# TeamMessage里type为0    1    2    3
-# x邀请y加入团队，x把y踢出团队，x把y设为管理，x撤销y的管理，x新建项目
+# TeamMessage里type为0    1    2    3   4   5
+# x邀请y加入团队，x把y踢出团队，x把y设为管理，x撤销y的管理，x新建项目  x删除项目
 
 # ProjectMessage里type为0   1   2   3
-# x新建了文件y，x删除了文件y，x开放文件y的预览
+# x新建了文件y，x删除了文件y，x开放文件y的预览  x关闭文件预览
 
 @csrf_exempt
 def getPersonalMessage(request):
@@ -77,6 +77,8 @@ def getTeamMessage(request):
     team_id = json.loads(request.body)['team_id']
     ans_list = []
     message_list = TeamMessage.objects.filter(team_id=team_id).order_by('-send_time')
+    if message_list is None:
+        return JsonResponse({'status_code': 6, 'msg': '???'})
     for messages in message_list:
         if messages.message_type == 0:
             a = {
@@ -202,30 +204,30 @@ def getProjectMessage(request):
 
 @csrf_exempt
 def agreeInvitation(request):
-    username = json.loads(request.body)['username']
-    team_id = json.loads(request.body)['team_id']
-    message_list = PersonalMessage.objects.filter(receiver=username, team_id=team_id)
-    for messages in message_list:
-        new_mem_in_team = Member_in_Team()
-        new_mem_in_team.username = messages.receiver
-        new_mem_in_team.team_id = team_id
-        new_mem_in_team.priority = 0
-        new_mem_in_team.save()
+    message_id = json.loads(request.body)['message_id']
+    message = PersonalMessage.objects.get(message_id=message_id)
+
     new_team_message = TeamMessage()
     new_team_message.message_type = 0
-    new_team_message.team_id = team_id
-    new_team_message.sender = PersonalMessage.objects.get(receiver=username, team_id=team_id)
-    new_team_message.receiver = username
+    new_team_message.team_id = message.team_id
+    new_team_message.sender = message.sender
+    new_team_message.receiver = message.receiver
     new_team_message.send_time = datetime.datetime.now()
+    new_team_message.save()
+    # 发消息
 
+    new_mem_in_team = Member_in_Team()
+    new_mem_in_team.username = message.receiver
+    new_mem_in_team.team_id = message.team_id
+    new_mem_in_team.priority = 0
+    new_mem_in_team.save()
+    # 加入团队
     return JsonResponse({'msg': "加入成功"})
 
 
 @csrf_exempt
 def disagreeInvitation(request):
-    username = json.loads(request.body)['username']
-    team_id = json.loads(request.body)['team_id']
-    message_list = PersonalMessage.objects.filter(receiver=username, team_id=team_id)
-    for messages in message_list:
-        messages.delete()
+    message_id = json.loads(request.body)['message_id']
+    PersonalMessage.objects.get(message_id=message_id).delete()
+    # 删除邀请记录
     return JsonResponse({'msg': "拒绝成功"})

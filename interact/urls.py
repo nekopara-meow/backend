@@ -9,7 +9,7 @@ urlpatterns = [
     path('disagreeInvitation', disagreeInvitation),
 
 
-    # path('getPersonalMessage', getPersonalMessage),
+
     # path('getPersonalMessage', getPersonalMessage),
     # path('getPersonalMessage', getPersonalMessage),
     # path('getPersonalMessage', getPersonalMessage),

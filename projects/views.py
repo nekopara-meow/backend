@@ -7,7 +7,7 @@ from pytz import utc
 from projects.models import Projectt, File
 from interact.models import Member_in_Team
 import datetime
-
+from interact.models import TeamMessage, ProjectMessage
 # Create your views here.
 
 XML = 0
@@ -41,6 +41,18 @@ def establish(request):
         project.brief_intro = brief_intro
         project.team_name = team_name
         project.save()
+
+        new_team_message = TeamMessage()
+        new_team_message.message_type = 4
+        new_team_message.team_id = team_id
+        new_team_message.sender = username
+        new_team_message.project_id = project.project_id
+        new_team_message.send_time = datetime.datetime.now()
+        new_team_message.save()
+        # team message
+
+
+
         return JsonResponse({'status_code': 1, 'msg': "新建项目成功"})
 
 
@@ -53,8 +65,21 @@ def delete(request):
     if already_in is None:
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
+
+        new_team_message = TeamMessage()
+        new_team_message.message_type = 5
+        new_team_message.team_id = Projectt.objects.get(project_id=project_id).team_id
+        new_team_message.sender = username
+        new_team_message.project_id = project_id
+        new_team_message.send_time = datetime.datetime.now()
+        new_team_message.delete_project_name = project.project_name
+        new_team_message.save()
+        # team message
         project.delete()
         return JsonResponse({'status_code': 1, 'msg': "删除成功"})
+
+
+
 
 
 @csrf_exempt

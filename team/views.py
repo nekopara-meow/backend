@@ -60,11 +60,7 @@ def invite(request):
     new_message.sender = inviter_username
     new_message.receiver = invitee_username
     new_message.save()
-    # new_mem_in_team = Member_in_Team()
-    # new_mem_in_team.username = invitee_username
-    # new_mem_in_team.team_id = team_id
-    # new_mem_in_team.priority = 0
-    # new_mem_in_team.save()
+
     return JsonResponse({'status_code': 1, 'msg': "Invite success"})
 
 
@@ -76,15 +72,69 @@ def setAdmins(request):
     setter = Member_in_Team.objects.get(username=setter_username, team_id=team_id)
     settee = Member_in_Team.objects.get(username=settee_username, team_id=team_id)
     already_in = Member_in_Team.objects.filter(username=settee_username, team_id=team_id, priority=1)
+    if setter is None:
+        return JsonResponse({'status_code': 4, 'msg': "操作者不在团队中"})
+    if settee is None:
+        return JsonResponse({'status_code': 5, 'msg': "被操作者不在团队中"})
     if already_in:
         return JsonResponse({'status_code': 2, 'msg': "Has already been admin"})
     if Member_in_Team.objects.get(username=setter.username, team_id=team_id).priority < 2:
         return JsonResponse({'status_code': 3, 'msg': "Setter doesn't have the priority"})
     settee.priority = 1
     settee.save()
+    new_personal_message = PersonalMessage()
+    new_personal_message.message_type = 2
+    new_personal_message.sender = setter
+    new_personal_message.receiver = settee
+    new_personal_message.send_time = datetime.datetime.now()
+    new_personal_message.team_id = team_id
+    new_personal_message.save()
+    # personal message
+
+    new_team_message = TeamMessage()
+    new_team_message.message_type = 2
+    new_team_message.team_id = team_id
+    new_team_message.sender = setter
+    new_team_message.receiver = settee
+    new_team_message.send_time = datetime.datetime.now()
+    new_team_message.save()
+    # team message
+
     return JsonResponse({'status_code': 1, 'msg': "Set success"})
 
+@csrf_exempt
+def deleteAdmins(request):
+    setter_username = json.loads(request.body)['setter']  # 设置人
+    settee_username = json.loads(request.body)['settee']  # 被设置人
+    team_id = json.loads(request.body)['team_id']
+    setter = Member_in_Team.objects.get(username=setter_username, team_id=team_id)
+    settee = Member_in_Team.objects.get(username=settee_username, team_id=team_id)
+    already_in = Member_in_Team.objects.filter(username=settee_username, team_id=team_id, priority=0)
+    if already_in:
+        return JsonResponse({'status_code': 2, 'msg': "该用户不是管理员"})
+    if Member_in_Team.objects.get(username=setter.username, team_id=team_id).priority < 2:
+        return JsonResponse({'status_code': 3, 'msg': "Setter doesn't have the priority"})
+    settee.priority = 0
 
+    new_personal_message = PersonalMessage()
+    new_personal_message.message_type = 3
+    new_personal_message.sender = setter
+    new_personal_message.receiver = settee
+    new_personal_message.send_time = datetime.datetime.now()
+    new_personal_message.team_id = team_id
+    new_personal_message.save()
+    # personal message
+
+    new_team_message = TeamMessage()
+    new_team_message.message_type = 3
+    new_team_message.team_id = team_id
+    new_team_message.sender = setter
+    new_team_message.receiver = settee
+    new_team_message.send_time = datetime.datetime.now()
+    new_team_message.save()
+    # team message
+
+    return JsonResponse({'status_code': 1, 'msg': "Set success", "tst": settee.priority})
 @csrf_exempt
 def deleteMem(request):
     deleter_username = json.loads(request.body)['deleter_username']  # 删除人
@@ -96,6 +146,15 @@ def deleteMem(request):
         return JsonResponse({'status_code': 2, 'msg': "Deleter doesn't have the priority"})
 
     # delete successfully
+    new_personal_message = PersonalMessage()
+    new_personal_message.message_type = 0
+    new_personal_message.sender = deleter_username
+    new_personal_message.receiver = deletee_username
+    new_personal_message.send_time = datetime.datetime.now()
+    new_personal_message.team_id = team_id
+    new_personal_message.save()
+    # personal message
+
     new_team_message = TeamMessage()
     new_team_message.message_type = 1
     new_team_message.team_id = team_id
@@ -103,6 +162,7 @@ def deleteMem(request):
     new_team_message.receiver = deletee_username
     new_team_message.send_time = datetime.datetime.now()
     new_team_message.save()
+    # team message
 
     Member_in_Team.objects.get(username=deletee_username, team_id=team_id).delete()
     return JsonResponse({'status_code': 1, 'msg': "删除成功!"})
