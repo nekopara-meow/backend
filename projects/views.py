@@ -68,6 +68,7 @@ def rename(request):
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
         project.project_name = new_name
+        project.save()
         return JsonResponse({'status_code': 1, 'msg': "重命名成功"})
 
 
