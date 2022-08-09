@@ -4,7 +4,7 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from interact.models import Member_in_Team, PersonalMessage
+from interact.models import Member_in_Team, PersonalMessage,TeamMessage
 from team.models import Team
 from team.models import Uml
 from projects.models import Projectt
@@ -96,6 +96,14 @@ def deleteMem(request):
         return JsonResponse({'status_code': 2, 'msg': "Deleter doesn't have the priority"})
 
     # delete successfully
+    new_team_message = TeamMessage()
+    new_team_message.message_type = 1
+    new_team_message.team_id = team_id
+    new_team_message.sender = deleter_username
+    new_team_message.receiver = deletee_username
+    new_team_message.send_time = datetime.datetime.now()
+    new_team_message.save()
+
     Member_in_Team.objects.get(username=deletee_username, team_id=team_id).delete()
     return JsonResponse({'status_code': 1, 'msg': "删除成功!"})
 
