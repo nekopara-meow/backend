@@ -299,7 +299,7 @@ def new_axure(request):
         file.project_id = project_id
         file.creator = username
         file.save()
-        return JsonResponse({'status_code': 1, 'auxre_id': file.file_id, 'message': '新建成功'})
+        return JsonResponse({'status_code': 1, 'axure_id': file.file_id, 'message': '新建成功'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
 
 
