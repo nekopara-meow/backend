@@ -331,7 +331,6 @@ def get_projects_by_user(request):
     if request.method == 'POST':
         username = json.loads(request.body)['username']
         teams = Member_in_Team.objects.filter(username=username)
-        team_projects = []
         project_infos = []
         if teams:
             for team in teams:
@@ -342,8 +341,7 @@ def get_projects_by_user(request):
                         project_info = {'project_id': project.project_id, 'project_name': project.project_name,
                                         'brief_intro': project.brief_intro, 'team_name': project.team_name}
                         project_infos.append(project_info)
-            team_projects.append(project_infos)
-        return JsonResponse({'status_code': 1, 'projects': team_projects})
+        return JsonResponse({'status_code': 1, 'projects': project_infos})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
 
 
@@ -372,8 +370,6 @@ def get_files_by_user(request):
         username = json.loads(request.body)['username']
         teams = Member_in_Team.objects.filter(username=username)
         file_infos = []
-        project_files = []
-        team_projects = []
         if teams:
             for team in teams:
                 team_id = team.team_id
@@ -390,9 +386,7 @@ def get_files_by_user(request):
                                     'update_time': file.update_time, 'team_name': project.team_name,
                                 }
                                 file_infos.append(file_info)
-                            project_files.append(file_infos)
-                    team_projects.append(project_files)
-        return JsonResponse({'status_code': 1, 'team_projects': team_projects})
+        return JsonResponse({'status_code': 1, 'team_projects': file_infos})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
 
 
@@ -404,7 +398,6 @@ def get_files_by_creator(request):
         teams = Member_in_Team.objects.filter(username=username)
         file_infos = []
         project_files = []
-        team_projects = []
         if teams:
             for team in teams:
                 team_id = team.team_id
@@ -422,6 +415,5 @@ def get_files_by_creator(request):
                                 }
                                 file_infos.append(file_info)
                             project_files.append(file_infos)
-                    team_projects.append(project_files)
-        return JsonResponse({'status_code': 1, 'team_projects': team_projects})
+        return JsonResponse({'status_code': 1, 'team_projects': project_files})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
