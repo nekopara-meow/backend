@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 
+from djangoProject import settings
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include(('users.urls', 'users'))),
@@ -23,3 +25,10 @@ urlpatterns = [
     path('api/interact/', include(('interact.urls', 'interact'))),
     path('api/projects/', include(('projects.urls', 'projects'))),
 ]
+
+if "debug_toolbar" in settings.INSTALLED_APPS:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
+
