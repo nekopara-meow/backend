@@ -287,11 +287,12 @@ def rename_file_by_id(request):
 def get_projects_by_user(request):
     if request.method == 'POST':
         username = json.loads(request.body)['username']
-        team_ids = Member_in_Team.objects.filter(username=username).values('team_id')
+        teams = Member_in_Team.objects.filter(username=username).values('team_id')
         team_projects = []
         project_infos = []
-        if team_ids:
-            for team_id in team_ids:
+        if teams:
+            for team in teams:
+                team_id = team.team_id
                 projects = Projectt.objects.filter(team_id=team_id)
                 if projects:
                     for project in projects:
@@ -326,13 +327,13 @@ def get_files_by_project(request):
 def get_files_by_user(request):
     if request.method == 'POST':
         username = json.loads(request.body)['username']
-        team_ids = Member_in_Team.objects.filter(username=username).values('team_id')
+        teams = Member_in_Team.objects.filter(username=username).values('team_id')
         file_infos = []
         project_files = []
         team_projects = []
-        if team_ids:
-            for team_id in team_ids:
-
+        if teams:
+            for team in teams:
+                team_id = team.team_id
                 projects = Projectt.objects.filter(team_id=team_id)
                 if projects:
                     for project in projects:
@@ -357,12 +358,13 @@ def get_files_by_creator(request):
     if request.method == 'POST':
         creator = json.loads(request.body)['creator']
         username = creator
-        team_ids = Member_in_Team.objects.filter(username=username).values('team_id')
+        teams = Member_in_Team.objects.filter(username=username)
         file_infos = []
         project_files = []
         team_projects = []
-        if team_ids:
-            for team_id in team_ids:
+        if teams:
+            for team in teams:
+                team_id = team.team_id
                 projects = Projectt.objects.filter(team_id=team_id)
                 if projects:
                     for project in projects:
