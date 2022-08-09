@@ -59,6 +59,7 @@ def delete(request):
         projectbin.team_id = project.team_id
         projectbin.delete_time = datetime.datetime.now()
         projectbin.save()
+        project.save()
         return JsonResponse({'status_code': 1, 'msg': "删除成功,已放入回收站"})
 
 
