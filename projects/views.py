@@ -330,6 +330,7 @@ def del_file_by_id(request):
         file_id = json.loads(request.body)['file_id']
         file = File.objects.get(file_id=file_id)
         file.deleted = True
+        file.save()
         filebin = FileBin()
         filebin.project_id = file.project_id
         filebin.file_id = file_id
