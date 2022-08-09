@@ -26,7 +26,7 @@ def getPersonalMessage(request):
     for messages in message_list:
         if messages.message_type == 0:
             a = {
-                'id': messages.id,
+                'message_id': messages.message_id,
                 'msg':
                     '您被移出了' +
                     str(Team.objects.get(team_id=messages.team_id).team_name),
@@ -36,7 +36,7 @@ def getPersonalMessage(request):
             }
         if messages.message_type == 1:
             a = {
-                'id': messages.id,
+                'message_id': messages.message_id,
                 'msg':
                     str(messages.sender) + '邀请您加入' +
                     str(Team.objects.get(team_id=messages.team_id).team_name),
@@ -46,7 +46,7 @@ def getPersonalMessage(request):
             }
         if messages.message_type == 2:
             a = {
-                'id': messages.id,
+                'message_id': messages.message_id,
                 'msg':
                     '您''被设为了' +
                     str(Team.objects.get(team_id=messages.team_id).team_name) + "的管理员",
@@ -56,7 +56,7 @@ def getPersonalMessage(request):
             }
         if messages.message_type == 3:
             a = {
-                'id': messages.id,
+                'message_id': messages.message_id,
                 'msg':
                     '您被移除了' +
                     str(Team.objects.get(team_id=messages.team_id).team_name) + "的管理员职位",
@@ -79,7 +79,7 @@ def getTeamMessage(request):
     for messages in message_list:
         if messages.message_type == 0:
             a = {
-                'id': messages.id,
+                'message_id': messages.message_id,
                 'msg':
                     str(messages.sender) + '邀请了' +
                     str(messages.receiver) + "加入了团队",
@@ -90,7 +90,7 @@ def getTeamMessage(request):
 
         if messages.message_type == 1:
             a = {
-                'id': messages.id,
+                'message_id': messages.message_id,
                 'msg':
                     str(messages.sender) + '将' +
                     str(messages.receiver) + "移出了团队",
@@ -100,7 +100,7 @@ def getTeamMessage(request):
             }
         if messages.message_type == 2:
             a = {
-                'id': messages.id,
+                'message_id': messages.message_id,
                 'msg':
                     str(messages.sender) + '将' +
                     str(messages.receiver) + "设为了团队管理",
@@ -110,7 +110,7 @@ def getTeamMessage(request):
             }
         if messages.message_type == 3:
             a = {
-                'id': messages.id,
+                'message_id': messages.message_id,
                 'msg':
                     str(messages.sender) + '撤销了' +
                     str(messages.receiver) + "的团队管理",
@@ -120,7 +120,7 @@ def getTeamMessage(request):
             }
         if messages.message_type == 4:
             a = {
-                'id': messages.id,
+                'message_id': messages.message_id,
                 'msg':
                     str(messages.sender) + '新建了项目' +
                     str(Projectt.objects.get(project_id=messages.project_id).project_name),
@@ -130,7 +130,7 @@ def getTeamMessage(request):
             }
         if messages.message_type == 5:
             a = {
-                'id': messages.id,
+                'message_id': messages.message_id,
                 'msg':
                     str(messages.sender) + '删除了项目' +
                     str(messages.delete_project_name),
@@ -153,7 +153,7 @@ def getProjectMessage(request):
     for messages in message_list:
         if messages.message_type == 0:
             a = {
-                'id': messages.id,
+                'message_id': messages.message_id,
                 'msg':
                     str(messages.sender) + '新建了文件' +
                     str(File.objects.get(file_id=messages.file_id).file_name),
@@ -163,7 +163,7 @@ def getProjectMessage(request):
             }
         if messages.message_type == 1:
             a = {
-                'id': messages.id,
+                'message_id': messages.message_id,
                 'msg':
                     str(messages.sender) + '删除了文件' +
                     str(messages.delete_file_name),
@@ -173,7 +173,7 @@ def getProjectMessage(request):
             }
         if messages.message_type == 2:
             a = {
-                'id': messages.id,
+                'message_id': messages.message_id,
                 'msg':
                     str(messages.sender) + '开放了原型设计' +
                     str(File.objects.get(file_id=messages.file_id).file_name) + '的预览',
@@ -184,7 +184,7 @@ def getProjectMessage(request):
 
         if messages.message_type == 3:
             a = {
-                'id': messages.id,
+                'message_id': messages.message_id,
                 'msg':
                     str(messages.sender) + '关闭了原型设计' +
                     str(File.objects.get(file_id=messages.file_id).file_name) + '的预览',
