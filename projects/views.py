@@ -8,8 +8,12 @@ from projects.models import Projectt, File
 from interact.models import Member_in_Team
 import datetime
 
-
 # Create your views here.
+
+XML = 0
+DOC = 1
+DSN = 2
+
 
 @csrf_exempt
 def clear(request):
@@ -24,6 +28,7 @@ def establish(request):
     team_id = json.loads(request.body)['team_id']
     project_name = json.loads(request.body)['project_name']
     brief_intro = json.loads(request.body)['brief_intro']
+    team_name = Team.objects.get(team_id=team_id).team_name
     already_in = Member_in_Team.objects.filter(username=username, team_id=team_id)
     if already_in is None:
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
@@ -34,6 +39,7 @@ def establish(request):
         project.creator = username
         project.create_time = datetime.datetime.now()
         project.brief_intro = brief_intro
+        project.team_name = team_name
         project.save()
         return JsonResponse({'status_code': 1, 'msg': "新建项目成功"})
 
@@ -118,7 +124,7 @@ def viewUMLsInProject(request):
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
         ans_list = []
-        file_list = File.objects.filter(project_id=project_id, file_type=0)
+        file_list = File.objects.filter(project_id=project_id, file_type=XML)
         for files in file_list:
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
@@ -140,7 +146,7 @@ def viewDesignsInProject(request):
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
         ans_list = []
-        file_list = File.objects.filter(project_id=project_id, file_type=2)
+        file_list = File.objects.filter(project_id=project_id, file_type=DSN)
         for files in file_list:
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
@@ -162,7 +168,7 @@ def viewTextsInProject(request):
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
         ans_list = []
-        file_list = File.objects.filter(project_id=project_id, file_type=1)
+        file_list = File.objects.filter(project_id=project_id, file_type=DOC)
         for files in file_list:
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
@@ -274,4 +280,102 @@ def rename_file_by_id(request):
         file.update_time = datetime.datetime.now()
         file.save()
         return JsonResponse({'status_code': 1, 'message': '重命名成功！'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
+@csrf_exempt
+def get_projects_by_user(request):
+    if request.method == 'POST':
+        username = json.loads(request.body)['username']
+        team_ids = Member_in_Team.objects.filter(username=username)
+        team_projects = []
+        project_infos = []
+        if team_ids:
+            for team_id in team_ids:
+                projects = Projectt.objects.filter(team_id=team_id)
+                if projects:
+                    for project in projects:
+                        project_info = {'project_id': project.project_id, 'project_name': project.project_name,
+                                        'brief_intro': project.brief_intro, 'team_name': project.team_name}
+                        project_infos.append(project_info)
+            team_projects.append(project_infos)
+        return JsonResponse({'status_code': 1, 'projects': team_projects})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
+
+
+@csrf_exempt
+def get_files_by_project(request):
+    if request.method == 'POST':
+        project_id = json.loads(request.body)['project_id']
+        files = File.objects.filter(project_id=project_id, file_type=DOC)
+        file_infos = []
+        if files:
+            for file in files:
+                file_info = {
+                    'project_id': file.project_id, 'creator': file.creator,
+                    'file_id': file.file_id, 'file_type': file.file_type,
+                    'file_name': file.file_name, 'file_content': file.file_url,
+                    'update_time': file.update_time,
+                }
+                file_infos.append(file_info)
+        return JsonResponse({'status_code': 1, 'file_infos': file_infos})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
+
+
+@csrf_exempt
+def get_files_by_user(request):
+    if request.method == 'POST':
+        username = json.loads(request.body)['username']
+        team_ids = Member_in_Team.objects.filter(username=username)
+        file_infos = []
+        project_files = []
+        team_projects = []
+        if team_ids:
+            for team_id in team_ids:
+                projects = Projectt.objects.filter(team_id=team_id)
+                if projects:
+                    for project in projects:
+                        files = File.objects.filter(project_id=project.project_id)
+                        if files:
+                            for file in files:
+                                file_info = {
+                                    'project_id': file.project_id, 'creator': file.creator,
+                                    'file_id': file.file_id, 'file_type': file.file_type,
+                                    'file_name': file.file_name, 'file_content': file.file_url,
+                                    'update_time': file.update_time, 'team_name': project.team_name,
+                                }
+                                file_infos.append(file_info)
+                            project_files.append(file_infos)
+                    team_projects.append(project_files)
+        return JsonResponse({'status_code': 1, 'team_projects': team_projects})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
+@csrf_exempt
+def get_files_by_creator(request):
+    if request.method == 'POST':
+        creator = json.loads(request.body)['creator']
+        username = creator
+        team_ids = Member_in_Team.objects.filter(username=username)
+        file_infos = []
+        project_files = []
+        team_projects = []
+        if team_ids:
+            for team_id in team_ids:
+                projects = Projectt.objects.filter(team_id=team_id)
+                if projects:
+                    for project in projects:
+                        files = File.objects.filter(project_id=project.project_id,creator=creator)
+                        if files:
+                            for file in files:
+                                file_info = {
+                                    'project_id': file.project_id, 'creator': file.creator,
+                                    'file_id': file.file_id, 'file_type': file.file_type,
+                                    'file_name': file.file_name, 'file_content': file.file_url,
+                                    'update_time': file.update_time, 'team_name': project.team_name,
+                                }
+                                file_infos.append(file_info)
+                            project_files.append(file_infos)
+                    team_projects.append(project_files)
+        return JsonResponse({'status_code': 1, 'team_projects': team_projects})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})

@@ -7,6 +7,7 @@ import datetime
 # Create your models here.
 class Projectt(models.Model):
     team_id = models.IntegerField(verbose_name="项目所属团队ID")
+    team_name = models.CharField(max_length=50, default="")
     project_id = models.AutoField(verbose_name="项目ID", primary_key=True)
     project_name = models.CharField(max_length=50, verbose_name="项目名称")
     creator = models.CharField(max_length=128, verbose_name="创始人用户名")
