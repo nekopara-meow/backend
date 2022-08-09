@@ -152,7 +152,7 @@ def viewDesignsInProject(request):
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
                 'file_name': files.file_name, 'file_content': files.file_url,
-                'update_time': files.update_time,
+                'update_time': files.update_time, 'name_url': files.name_url
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
