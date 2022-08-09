@@ -10,6 +10,7 @@ import datetime
 from interact.models import PersonalMessage, ProjectMessage, TeamMessage
 from users.models import User
 
+
 # PersonalMessage里type为0是被踢出团队 1是邀请加入团队 2是被设为管理员 3是被取消管理员
 
 # TeamMessage里type为0    1    2    3
@@ -32,7 +33,7 @@ def getPersonalMessage(request):
                     str(Team.objects.get(team_id=messages.team_id).team_name),
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.filter(username=messages.sender)
+                'avatar': User.objects.get(username=messages.sender).avatar
             }
         if messages.message_type == 1:
             a = {
@@ -42,17 +43,17 @@ def getPersonalMessage(request):
                     str(Team.objects.get(team_id=messages.team_id).team_name),
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.filter(username=messages.sender)
+                'avatar': User.objects.get(username=messages.sender).avatar
             }
         if messages.message_type == 2:
             a = {
                 'message_id': messages.message_id,
                 'msg':
-                    '您''被设为了' +
+                    '您被设为了' +
                     str(Team.objects.get(team_id=messages.team_id).team_name) + "的管理员",
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.filter(username=messages.sender)
+                'avatar': User.objects.get(username=messages.sender).avatar
             }
         if messages.message_type == 3:
             a = {
@@ -62,7 +63,7 @@ def getPersonalMessage(request):
                     str(Team.objects.get(team_id=messages.team_id).team_name) + "的管理员职位",
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.filter(username=messages.sender)
+                'avatar': User.objects.get(username=messages.sender).avatar
             }
         ans_list.append(a)
     return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -85,7 +86,7 @@ def getTeamMessage(request):
                     str(messages.receiver) + "加入了团队",
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.filter(username=messages.sender)
+                'avatar': User.objects.get(username=messages.sender).avatar
             }
 
         if messages.message_type == 1:
@@ -96,7 +97,7 @@ def getTeamMessage(request):
                     str(messages.receiver) + "移出了团队",
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.filter(username=messages.sender)
+                'avatar': User.objects.get(username=messages.sender).avatar
             }
         if messages.message_type == 2:
             a = {
@@ -106,7 +107,7 @@ def getTeamMessage(request):
                     str(messages.receiver) + "设为了团队管理",
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.filter(username=messages.sender)
+                'avatar': User.objects.get(username=messages.sender).avatar
             }
         if messages.message_type == 3:
             a = {
@@ -116,7 +117,7 @@ def getTeamMessage(request):
                     str(messages.receiver) + "的团队管理",
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.filter(username=messages.sender)
+                'avatar': User.objects.get(username=messages.sender).avatar
             }
         if messages.message_type == 4:
             a = {
@@ -126,7 +127,7 @@ def getTeamMessage(request):
                     str(Projectt.objects.get(project_id=messages.project_id).project_name),
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.filter(username=messages.sender)
+                'avatar': User.objects.get(username=messages.sender).avatar
             }
         if messages.message_type == 5:
             a = {
@@ -136,7 +137,7 @@ def getTeamMessage(request):
                     str(messages.delete_project_name),
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.filter(username=messages.sender)
+                'avatar': User.objects.get(username=messages.sender).avatar
             }
         ans_list.append(a)
     return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -159,7 +160,7 @@ def getProjectMessage(request):
                     str(File.objects.get(file_id=messages.file_id).file_name),
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.filter(username=messages.sender)
+                'avatar': User.objects.get(username=messages.sender).avatar
             }
         if messages.message_type == 1:
             a = {
@@ -169,7 +170,7 @@ def getProjectMessage(request):
                     str(messages.delete_file_name),
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.filter(username=messages.sender)
+                'avatar': User.objects.get(username=messages.sender).avatar
             }
         if messages.message_type == 2:
             a = {
@@ -179,7 +180,7 @@ def getProjectMessage(request):
                     str(File.objects.get(file_id=messages.file_id).file_name) + '的预览',
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.filter(username=messages.sender)
+                'avatar': User.objects.get(username=messages.sender).avatar
             }
 
         if messages.message_type == 3:
@@ -190,10 +191,11 @@ def getProjectMessage(request):
                     str(File.objects.get(file_id=messages.file_id).file_name) + '的预览',
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.filter(username=messages.sender)
+                'avatar': User.objects.get(username=messages.sender).avatar
             }
         ans_list.append(a)
     return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+
 
 # ProjectMessage里type为0   1   2   3
 # x新建了文件y，x删除了文件y，x开放文件y的预览   x关闭文件y的预览
@@ -209,6 +211,14 @@ def agreeInvitation(request):
         new_mem_in_team.team_id = team_id
         new_mem_in_team.priority = 0
         new_mem_in_team.save()
+    new_team_message = TeamMessage()
+    new_team_message.message_type = 0
+    new_team_message.team_id = team_id
+    new_team_message.sender = PersonalMessage.objects.get(receiver=username, team_id=team_id)
+    new_team_message.receiver = username
+    new_team_message.send_time = datetime.datetime.now()
+
+    return JsonResponse({'msg': "加入成功"})
 
 
 @csrf_exempt
@@ -218,3 +228,4 @@ def disagreeInvitation(request):
     message_list = PersonalMessage.objects.filter(receiver=username, team_id=team_id)
     for messages in message_list:
         messages.delete()
+    return JsonResponse({'msg': "拒绝成功"})
