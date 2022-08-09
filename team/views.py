@@ -66,8 +66,8 @@ def setAdmins(request):
     setter_username = json.loads(request.body)['setter']  # 设置人
     settee_username = json.loads(request.body)['settee']  # 被设置人
     team_id = json.loads(request.body)['team_id']
-    setter = Member_in_Team.objects.get(username=setter_username,team_id=team_id)
-    settee = Member_in_Team.objects.get(username=settee_username,team_id=team_id)
+    setter = Member_in_Team.objects.get(username=setter_username, team_id=team_id)
+    settee = Member_in_Team.objects.get(username=settee_username, team_id=team_id)
     already_in = Member_in_Team.objects.filter(username=settee_username, team_id=team_id, priority=1)
     if already_in:
         return JsonResponse({'status_code': 2, 'msg': "Has already been admin"})
@@ -276,34 +276,44 @@ def getUsersOfTeam(request):
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
 
-# @csrf_exempt
-# def save_uml(request):
-#     if request.method == 'POST':
-#         username = json.loads(request.body)['username']
-#         team_id = json.loads(request.body)['team_id']
-#         uml_url = json.loads(request.body)['uml_url']
-#         new_uml = Uml()
-#         new_uml.team_id = team_id
-#         new_uml.uml_url = uml_url
-#         new_uml.creator = username
-#         try:
-#             new_uml.save()
-#             return JsonResponse({'status_code': 1})
-#         except:
-#             return JsonResponse({'status_code': 2})
-#     else:
-#         return JsonResponse({'status_code': -1})
-#
-#
-# @csrf_exempt
-# def load_uml(request):
-#     if request.method == 'POST':
-#         uml_id = json.loads(request.body)['uml_id']
-#         try:
-#             uml = Uml.objects.get(uml_id=uml_id)
-#         except:
-#             return JsonResponse({'status_code': 2})
-#         uml_url = uml.uml_url
-#         return JsonResponse({'status_code': 1, 'uml_url': uml_url})
-#     else:
-#         return JsonResponse({'status_code': -1})
+
+@csrf_exempt
+def update_team_info(request):
+    if request.method == 'POST':
+        team_id = json.loads(request.body)['team_id']
+        team_avatar = json.loads(request.body)['team_avatar']
+        brief_intro = json.loads(request.body)['brief_intro']
+        team_name = json.loads(request.body)['team_name']
+        team = Team.objects.get(team_id=team_id)
+        team.team_name = team_name
+        team.avatar = team_avatar
+        team.brief_intro = brief_intro
+        team.save()
+        return JsonResponse({'status_code': 1, 'message': '更新成功!'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
+
+
+@csrf_exempt
+def copy_project(request):
+    if request.method == 'POST':
+        team_id = json.loads(request.body)['team_id']
+        project_id = json.loads(request.body)['project_id']
+        old_project = Projectt.objects.get(project_id=project_id)
+        new_project = Projectt()
+        new_project.project_name = old_project.project_name + '(副本)'
+        new_project.team_id = team_id
+        new_project.brief_intro = old_project.brief_intro
+        new_project.team_name = old_project.team_name
+        new_project.creator = old_project.creator
+        new_project.update_time = datetime.datetime.now()
+        new_project.create_time = new_project.update_time
+        new_project.deleted = old_project.deleted
+        new_project.design_num = old_project.design_num
+        new_project.file_num = old_project.file_num
+        new_project.text_num = old_project.text_num
+        new_project.uml_num = old_project.uml_num
+        new_project.save()
+        return JsonResponse({'status_code': 1,'message': '复制成功!', 'new_project_id':new_project.project_id})
+    return JsonResponse({'status_code': -1,'message': '请求方式错误!'})
+
+
