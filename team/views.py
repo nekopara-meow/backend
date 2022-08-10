@@ -4,9 +4,10 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from interact.models import Member_in_Team, PersonalMessage,TeamMessage
+from interact.models import Member_in_Team, PersonalMessage, TeamMessage
 from team.models import Team
 from team.models import Uml
+from projects.models import File
 from projects.models import Projectt
 import datetime
 from users.models import User
@@ -102,6 +103,7 @@ def setAdmins(request):
 
     return JsonResponse({'status_code': 1, 'msg': "Set success"})
 
+
 @csrf_exempt
 def deleteAdmins(request):
     setter_username = json.loads(request.body)['canceler']  # 设置人
@@ -136,6 +138,8 @@ def deleteAdmins(request):
     # team message
 
     return JsonResponse({'status_code': 1, 'msg': "Set success"})
+
+
 @csrf_exempt
 def deleteMem(request):
     deleter_username = json.loads(request.body)['deleter_username']  # 删除人
@@ -292,7 +296,7 @@ def viewProjectsInTeam(request):
         deleted = True
     else:
         deleted = False
-    project_list = Projectt.objects.filter(team_id=team_id,deleted=deleted)
+    project_list = Projectt.objects.filter(team_id=team_id, deleted=deleted)
     ans_list = []
     for projects in project_list:
         a = {'project_id': projects.project_id,
@@ -392,8 +396,9 @@ def copy_project(request):
         new_project.text_num = old_project.text_num
         new_project.uml_num = old_project.uml_num
         new_project.save()
-        return JsonResponse({'status_code': 1,'message': '复制成功!', 'new_project_id':new_project.project_id})
-    return JsonResponse({'status_code': -1,'message': '请求方式错误!'})
+        return JsonResponse({'status_code': 1, 'message': '复制成功!', 'new_project_id': new_project.project_id})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
+
 
 @csrf_exempt
 def getAllAvatarsOfTeam(request):
@@ -409,3 +414,23 @@ def getAllAvatarsOfTeam(request):
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
+
+
+@csrf_exempt
+def delete_team(request):
+    if request.method == 'POST':
+        username = json.loads(request.body)['username']
+        team_id = json.loads(request.body)['team_id']
+        if Member_in_Team.objects.get(username=username, team_id=team_id).priority == 0:
+            return JsonResponse({'status_code': 2, 'message': '权限不足!'})
+        for relation in Member_in_Team.objects.filter(team_id=team_id):
+            relation.delete()
+        projects = Projectt.objects.filter(team_id=team_id)
+        for project in projects:
+            project_id = project.project_id
+            files = File.objects.filter(project_id=project_id)
+            for file in files:
+                file.delete()
+            projects.delete()
+        return JsonResponse({'status_code': 1, 'message': '删除成功!'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
