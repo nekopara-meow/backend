@@ -105,7 +105,7 @@ def setAdmins(request):
 @csrf_exempt
 def deleteAdmins(request):
     setter_username = json.loads(request.body)['canceler']  # 设置人
-    settee_username = json.loads(request.body)['camcelee']  # 被设置人
+    settee_username = json.loads(request.body)['cancelee']  # 被设置人
     team_id = json.loads(request.body)['team_id']
     setter = Member_in_Team.objects.get(username=setter_username, team_id=team_id)
     settee = Member_in_Team.objects.get(username=settee_username, team_id=team_id)
