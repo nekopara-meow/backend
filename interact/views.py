@@ -217,7 +217,6 @@ def agreeInvitation(request):
         message.delete()
         return JsonResponse({'status_code': 3, 'msg': "Inviter doesn't have the priority"})
 
-
     new_team_message = TeamMessage()
     new_team_message.message_type = 0
     new_team_message.team_id = message.team_id
@@ -243,3 +242,45 @@ def disagreeInvitation(request):
     PersonalMessage.objects.get(message_id=message_id).delete()
     # 删除邀请记录
     return JsonResponse({'status_code': 1, 'msg': "拒绝成功"})
+
+
+@csrf_exempt
+def search_all(request):
+    if request.method == 'POST':
+        username = json.loads(request.body)['username']
+        keyword = json.loads(request.body)['keyword']
+        team_ids = []
+        project_ids = []
+        if 'team_ids' in json.loads(request.body):
+            team_ids = json.loads(request.body)['team_ids']
+        else:
+            teams = Member_in_Team.objects.filter(username=username).order_by('team_id')
+            for team in teams:
+                team_ids.append(team.team_id)
+        project_infos = []
+        projects = Projectt.objects.filter(team_id__in=team_ids).order_by('team_id')
+        for project in projects:
+            project_ids.append(project.project_id)
+            if keyword in project.project_name:
+                project_info = {'project_name': project.project_name, 'brief_intro': project.brief_intro,
+                                'create_time': project.create_time, 'team_name': project.team_name,
+                                'team_id': project.team_id
+                                }
+            project_infos.append(project_info)
+        files = File.objects.filter(project_id__in=project_ids, file_name__icontains=keyword).order_by('file_id')
+        file_infos = []
+        for file in files:
+            file_info = {'file_id': file.file_id, 'update_time': file.update_time,
+                         'file_type': file.file_type, 'creator': file.creator,
+                         'file_name': file.file_name, 'file_content': file.file_url,
+                         'name_url': file.name_url, 'project_id': file.project_id}
+            file_infos.append(file_info)
+        users = User.objects.filter(username__contains=keyword)
+        user_infos = []
+        for user in users:
+            user_info = {'username': user.username, 'nickname': user.nickname,
+                         'email': user.email, 'brief_intro': user.brief_intro}
+            user_infos.append(user_info)
+        return JsonResponse({'status_code': 1, 'project_infos': project_infos, 'file_infos': file_infos,
+                             'user_infos': user_infos})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
