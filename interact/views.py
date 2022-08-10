@@ -159,9 +159,9 @@ def getProjectMessage(request):
                 'msg':
                     '新建了文件' +
                     str(File.objects.get(file_id=messages.file_id).file_name),
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.username, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.get(username=messages.sender).avatar
+                'avatar': User.objects.get(username=messages.username).avatar
             }
         if messages.message_type == 1:
             a = {
@@ -169,9 +169,9 @@ def getProjectMessage(request):
                 'msg':
                     '删除了文件' +
                     str(messages.delete_file_name),
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.username, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.get(username=messages.sender).avatar
+                'avatar': User.objects.get(username=messages.username).avatar
             }
         if messages.message_type == 2:
             a = {
@@ -179,9 +179,9 @@ def getProjectMessage(request):
                 'msg':
                     '开放了原型设计' +
                     str(File.objects.get(file_id=messages.file_id).file_name) + '的预览',
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.username, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.get(username=messages.sender).avatar
+                'avatar': User.objects.get(username=messages.username).avatar
             }
 
         if messages.message_type == 3:
@@ -190,9 +190,9 @@ def getProjectMessage(request):
                 'msg':
                     '关闭了原型设计' +
                     str(File.objects.get(file_id=messages.file_id).file_name) + '的预览',
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.username, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
-                'avatar': User.objects.get(username=messages.sender).avatar
+                'avatar': User.objects.get(username=messages.username).avatar
             }
         ans_list.append(a)
     return JsonResponse({'status_code': 1, 'ans_list': ans_list})
