@@ -32,4 +32,7 @@ urlpatterns = [
     path('recover/project', recover_project_by_id),
     path('updateprojectinfo', update_project_info),
     path('viewProject', viewProject),
+    path('viewAxure', viewAxure),
+    path('openAxure', openAxure),
+    path('closeAxure', closeAxure),
 ]
