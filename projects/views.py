@@ -139,31 +139,30 @@ def uploadFile(request):
 @csrf_exempt
 def viewFilesInProject(request):
     username = json.loads(request.body)['username']
-    project_id = json.loads(request.body)['project_id']
-    if 'deleted' in json.loads(request.body):
-        deleted = True
-    else:
-        deleted = False
-    project = Projectt.objects.get(project_id=project_id)
-    already_in = Member_in_Team.objects.filter(username=username, team_id=project.team_id)
-    if already_in is None:
-        return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
-    else:
-        ans_list = []
-        file_list = File.objects.filter(project_id=project_id, deleted=deleted).order_by('update_time')
-        i = 0
-        for files in file_list:
-            i += 1
-            a = {
-                'project_id': files.project_id, 'creator': files.creator,
-                'file_id': files.file_id, 'file_type': files.file_type,
-                'file_name': files.file_name, 'file_content': files.file_url,
-                'update_time': files.update_time.strftime('%b-%m-%y %H:%M:%S'),
-            }
-            ans_list.append(a)
-            if i == 30:
-                break
-        return JsonResponse({'status_code': 1, 'ans_list': ans_list})
+    teams = Member_in_Team.objects.filter(username=username)
+    teamids = []
+    projectids = []
+    for team in teams:
+        teamids.append(team.team_id)
+    projects = Projectt.objects.filter(team_id__in=teamids)
+    for project in projects:
+        projectids.append(project.project_id)
+    file_list = File.objects.filter(project_id__in=projectids).order_by('update_time')
+    i = 0
+    ans_list = []
+    for files in file_list:
+        i += 1
+        a = {
+            'project_id': files.project_id, 'creator': files.creator,
+            'file_id': files.file_id, 'file_type': files.file_type,
+            'file_name': files.file_name, 'file_content': files.file_url,
+            'update_time': files.update_time.strftime('%b-%m-%y %H:%M:%S'),
+            'name_url': files.name_url
+        }
+        ans_list.append(a)
+        if i == 30:
+            break
+    return JsonResponse({'status_code': 1, 'ans_list': ans_list})
 
 
 @csrf_exempt
