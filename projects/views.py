@@ -645,7 +645,7 @@ def openAxure(request):
         already_in = Member_in_Team.objects.filter(team_id=project.team_id, username=username)
         if already_in:
             file.display = True
-
+            file.save()
             new_project_message = ProjectMessage()
             new_project_message.message_type = 2
             new_project_message.team_id = team.team_id
@@ -673,6 +673,7 @@ def closeAxure(request):
         already_in = Member_in_Team.objects.filter(team_id=project.team_id, username=username)
         if already_in:
             file.display = False
+            file.save()
             new_project_message = ProjectMessage()
             new_project_message.message_type = 3
             new_project_message.team_id = team.team_id
