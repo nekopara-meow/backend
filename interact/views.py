@@ -39,7 +39,7 @@ def getPersonalMessage(request):
             a = {
                 'message_id': messages.message_id,
                 'msg':
-                    str(messages.sender) + '邀请您加入' +
+                    '邀请您加入' +
                     str(Team.objects.get(team_id=messages.team_id).team_name),
                 'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
