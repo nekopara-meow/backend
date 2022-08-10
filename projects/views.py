@@ -35,7 +35,10 @@ def establish(request):
     else:
         project = Projectt()
         project.team_id = team_id
-        project.project_name = project_name
+        if Projectt.objects.filter(team_id=team_id, project_name=project_name):
+            project.project_name = project_name + '(1)'
+        else:
+            project.project_name = project_name
         project.creator = username
         project.create_time = datetime.datetime.now()
         project.update_time = datetime.datetime.now()
@@ -94,7 +97,10 @@ def rename(request):
     if already_in is None:
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
-        project.project_name = new_name
+        if Projectt.objects.filter(project_name=new_name,team_id=project.team_id):
+            project.project_name = new_name + '(1)'
+        else:
+            project.project_name = new_name
         project.update_time = datetime.datetime.now()
         project.save()
         return JsonResponse({'status_code': 1, 'msg': "重命名成功"})
@@ -112,7 +118,10 @@ def uploadFile(request):
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
         file = File()
-        file.file_name = file_name
+        if File.objects.filter(file_name=file_name, project_id=project_id):
+            file.file_name = file_name+'(1)'
+        else:
+            file.file_name = file_name
         file.file_type = file_type
         file.project_id = project_id
         file.creator = username
@@ -274,7 +283,12 @@ def newXML(request):
         username = json.loads(request.body)['username']
         project_id = json.loads(request.body)['project_id']
         uml_name = json.loads(request.body)['uml_name']
-        file.file_name = uml_name
+
+        if File.objects.filter(file_name=uml_name, project_id=project_id):
+            file.file_name = uml_name+'(1)'
+        else:
+            file.file_name = uml_name
+
         file.file_type = 0
         file.project_id = project_id
         file.creator = username
@@ -329,7 +343,12 @@ def newDOC(request):
         username = json.loads(request.body)['username']
         project_id = json.loads(request.body)['project_id']
         doc_name = json.loads(request.body)['doc_name']
-        file.file_name = doc_name
+
+        if File.objects.filter(file_name=doc_name, project_id=project_id):
+            file.file_name = doc_name+'(1)'
+        else:
+            file.file_name = doc_name
+
         file.file_type = 1
         file.project_id = project_id
         file.creator = username
@@ -383,7 +402,11 @@ def new_axure(request):
         axure_name = json.loads(request.body)['axure_name']
         width = json.loads(request.body)['width']
         height = json.loads(request.body)['height']
-        file.file_name = axure_name
+
+        if File.objects.filter(file_name=axure_name, project_id=project_id):
+            file.file_name = axure_name + '(1)'
+        else:
+            file.file_name = axure_name
         file.file_type = DSN
         file.project_id = project_id
         file.creator = username
@@ -437,7 +460,11 @@ def rename_file_by_id(request):
         file_id = json.loads(request.body)['file_id']
         new_name = json.loads(request.body)['new_file_name']
         file = File.objects.get(file_id=file_id)
-        file.file_name = new_name
+
+        if File.objects.filter(file_name=new_name, project_id=file.project_id):
+            file.file_name = new_name + '(1)'
+        else:
+            file.file_name = new_name
         file.update_time = datetime.datetime.now()
         file.save()
         return JsonResponse({'status_code': 1, 'message': '重命名成功！'})
@@ -594,7 +621,10 @@ def update_project_info(request):
         brief_intro = json.loads(request.body)['brief_intro']
         project_name = json.loads(request.body)['project_name']
         project = Projectt.objects.get(project_id=project_id)
-        project.project_name = project_name
+        if Projectt.objects.filter(project_name=project_name):
+            project.project_name = project_name+'(1)'
+        else:
+            project.project_name = project_name
         project.brief_intro = brief_intro
         project.update_time = datetime.datetime.now()
         project.save()
@@ -612,7 +642,8 @@ def viewProject(request):
             'brief_intro': project.brief_intro, 'create_time': project.create_time,
             'update_time': project.update_time, 'creator': project.creator,
             'project_name': project.project_name,
-            'team_name': Team.objects.get(team_id=project.team_id).team_name
+            'team_name': Team.objects.get(team_id=project.team_id).team_name,
+            'team_id': project.team_id
         })
     return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
 
