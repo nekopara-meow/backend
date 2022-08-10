@@ -7,7 +7,7 @@ import datetime
 
 
 def make_confirm_string(user):
-    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    now = datetime.datetime.now()
     code = hash_code(user.username, now)
     ConfirmString.objects.create(code=code, user=user, )
     return code
