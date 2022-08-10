@@ -279,7 +279,8 @@ def search_all(request):
         user_infos = []
         for user in users:
             user_info = {'username': user.username, 'nickname': user.nickname,
-                         'email': user.email, 'brief_intro': user.brief_intro}
+                         'email': user.email, 'brief_intro': user.brief_intro,
+                         'avatar':user.avatar}
             user_infos.append(user_info)
         return JsonResponse({'status_code': 1, 'project_infos': project_infos, 'file_infos': file_infos,
                              'user_infos': user_infos})
