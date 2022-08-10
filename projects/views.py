@@ -609,3 +609,76 @@ def viewProject(request):
             'team_name': Team.objects.get(team_id=project.team_id).team_name
             })
     return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
+
+
+@csrf_exempt
+def viewAxure(request):
+    if request.method == 'POST':
+        axure_id = json.loads(request.body)['axure_id']
+        username = json.loads(request.body)['username']
+        file = File.objects.get(file_id=axure_id)
+
+        if file.display == True:
+            return JsonResponse({'status_code': 1, 'file_url': file.file_url, 'name_url': file.name_url})
+        project = Projectt.objects.get(project_id=File.objects.get(file_id=axure_id).project_id)
+        already_in = Member_in_Team.objects.filter(team_id=project.team_id, username=username)
+        if already_in:
+            return JsonResponse({'status_code': 1, 'file_url': file.file_url, 'name_url': file.name_url})
+        return JsonResponse({'status_code': 2, 'msg': '该原型设计未开放，您无权访问！'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
+
+@csrf_exempt
+def openAxure(request):
+    if request.method == 'POST':
+        axure_id = json.loads(request.body)['axure_id']
+        username = json.loads(request.body)['username']
+        file = File.objects.get(file_id=axure_id)
+
+        if file.display == True:
+            return JsonResponse({'status_code': 2, 'msg': '该文件已开放预览'})
+
+        project = Projectt.objects.get(project_id=File.objects.get(file_id=axure_id).project_id)
+        team = Team.objects.get(team_id=project.team_id)
+        already_in = Member_in_Team.objects.filter(team_id=project.team_id, username=username)
+        if already_in:
+            file.display = True
+
+            new_project_message = ProjectMessage()
+            new_project_message.message_type = 2
+            new_project_message.team_id = team.team_id
+            new_project_message.project_id = project.project_id
+            new_project_message.file_id = axure_id
+            new_project_message.username = username
+            new_project_message.send_time = datetime.datetime.now()
+            # project message
+            return JsonResponse({'status_code': 1, 'file_url': file.file_url, 'name_url': file.name_url})
+        return JsonResponse({'status_code': 2, 'msg': '您无权开放该原型设计预览！'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
+
+@csrf_exempt
+def closeAxure(request):
+    if request.method == 'POST':
+        axure_id = json.loads(request.body)['axure_id']
+        username = json.loads(request.body)['username']
+        file = File.objects.get(file_id=axure_id)
+
+        if file.display == False:
+            return JsonResponse({'status_code': 2, 'msg': '该文件已关闭预览'})
+
+        project = Projectt.objects.get(project_id=File.objects.get(file_id=axure_id).project_id)
+        team = Team.objects.get(team_id=project.team_id)
+        already_in = Member_in_Team.objects.filter(team_id=project.team_id, username=username)
+        if already_in:
+            file.display = False
+            new_project_message = ProjectMessage()
+            new_project_message.message_type = 3
+            new_project_message.team_id = team.team_id
+            new_project_message.project_id = project.project_id
+            new_project_message.file_id = axure_id
+            new_project_message.username = username
+            new_project_message.send_time = datetime.datetime.now()
+            # project message
+            return JsonResponse({'status_code': 1, 'file_url': file.file_url, 'name_url': file.name_url})
+        return JsonResponse({'status_code': 2, 'msg': '您无权关闭该原型设计预览！'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
+
