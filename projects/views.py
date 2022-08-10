@@ -147,7 +147,7 @@ def viewFilesInProject(request):
     projects = Projectt.objects.filter(team_id__in=teamids)
     for project in projects:
         projectids.append(project.project_id)
-    file_list = File.objects.filter(project_id__in=projectids).order_by('update_time')
+    file_list = File.objects.filter(project_id__in=projectids).order_by('-update_time')
     i = 0
     ans_list = []
     for files in file_list:
