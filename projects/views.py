@@ -147,7 +147,7 @@ def viewFilesInProject(request):
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
                 'file_name': files.file_name, 'file_content': files.file_url,
-                'update_time': files.update_time,
+                'update_time': files.update_time.strftime('%b-%m-%y %H:%M:%S'),
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -173,7 +173,7 @@ def viewUMLsInProject(request):
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
                 'file_name': files.file_name, 'file_content': files.file_url,
-                'update_time': files.update_time,
+                'update_time': files.update_time.strftime('%b-%m-%y %H:%M:%S'),
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -199,7 +199,7 @@ def viewDesignsInProject(request):
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
                 'file_name': files.file_name, 'file_content': files.file_url,
-                'update_time': files.update_time, 'name_url': files.name_url
+                'update_time': files.update_time.strftime('%b-%m-%y %H:%M:%S'), 'name_url': files.name_url
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -225,7 +225,7 @@ def viewTextsInProject(request):
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
                 'file_name': files.file_name, 'file_content': files.file_url,
-                'update_time': files.update_time,
+                'update_time': files.update_time.strftime('%b-%m-%y %H:%M:%S'),
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -421,7 +421,7 @@ def get_files_by_project(request):
                     'project_id': file.project_id, 'creator': file.creator,
                     'file_id': file.file_id, 'file_type': file.file_type,
                     'file_name': file.file_name, 'file_content': file.file_url,
-                    'update_time': file.update_time,
+                    'update_time': file.update_time.strftime('%b-%m-%y %H:%M:%S'),
                 }
                 file_infos.append(file_info)
         return JsonResponse({'status_code': 1, 'file_infos': file_infos})
@@ -447,7 +447,7 @@ def get_files_by_user(request):
                                     'project_id': file.project_id, 'creator': file.creator,
                                     'file_id': file.file_id, 'file_type': file.file_type,
                                     'file_name': file.file_name, 'file_content': file.file_url,
-                                    'update_time': file.update_time, 'team_name': project.team_name,
+                                    'update_time': file.update_time.strftime('%b-%m-%y %H:%M:%S'), 'team_name': project.team_name,
                                 }
                                 file_infos.append(file_info)
         return JsonResponse({'status_code': 1, 'team_projects': file_infos})
@@ -475,7 +475,7 @@ def get_files_by_creator(request):
                                     'project_id': file.project_id, 'creator': file.creator,
                                     'file_id': file.file_id, 'file_type': file.file_type,
                                     'file_name': file.file_name, 'file_content': file.file_url,
-                                    'update_time': file.update_time, 'team_name': project.team_name,
+                                    'update_time': file.update_time.strftime('%b-%m-%y %H:%M:%S'), 'team_name': project.team_name,
                                 }
                                 file_infos.append(file_info)
                             project_files.append(file_infos)
@@ -554,7 +554,7 @@ def viewProject(request):
         return JsonResponse({
             'status_code': 1, 'message': '访问成功!',
             'brief_intro': project.brief_intro, 'create_time': project.create_time,
-            'update_time': project.update_time, 'creator': project.creator,
+            'update_time': project.update_time.strftime('%b-%m-%y %H:%M:%S'), 'creator': project.creator,
             'project_name': project.project_name,
             'team_name': Team.objects.get(team_id=project.team_id).team_name
             })

@@ -196,7 +196,7 @@ def viewSomeonesTeams0(request):
         a = {'team_id': team.team_id, 'team_name': team.team_name,
              'creator': team.creator, 'team_avatar': team.avatar,
              'team_brief_intro': team.brief_intro,
-             'create_time': team.create_time, 'member_num': team.member_num,
+             'create_time': team.create_time.strftime('%b-%m-%y %H:%M:%S'), 'member_num': team.member_num,
              'project_num': team.project_num
              }
         Team_Info.append(a)
@@ -226,7 +226,7 @@ def viewSomeonesTeams1(request):
         a = {'team_id': team.team_id, 'team_name': team.team_name,
              'creator': team.creator, 'team_avatar': team.avatar,
              'team_brief_intro': team.brief_intro,
-             'create_time': team.create_time, 'member_num': team.member_num,
+             'create_time': team.create_time.strftime('%b-%m-%y %H:%M:%S'), 'member_num': team.member_num,
              'project_num': team.project_num
              }
         Team_Info.append(a)
@@ -257,7 +257,7 @@ def viewSomeonesTeams2(request):
         a = {'team_id': team.team_id, 'team_name': team.team_name,
              'creator': team.creator, 'team_avatar': team.avatar,
              'team_brief_intro': team.brief_intro,
-             'create_time': team.create_time, 'member_num': team.member_num,
+             'create_time': team.create_time.strftime('%b-%m-%y %H:%M:%S'), 'member_num': team.member_num,
              'project_num': team.project_num
              }
         Team_Info.append(a)
@@ -281,7 +281,7 @@ def viewTeam(request):
     team = Team.objects.get(team_id=team_id)
     return JsonResponse({'status_code': 1, 'avatar': team.avatar,
                          'team_name': team.team_name, 'brief_intro': team.brief_intro,
-                         'create_time': team.create_time, 'creator': team.creator
+                         'create_time': team.create_time.strftime('%b-%m-%y %H:%M:%S'), 'creator': team.creator
                          })
 
 
@@ -298,7 +298,7 @@ def viewProjectsInTeam(request):
         a = {'project_id': projects.project_id,
              'project_name': projects.project_name,
              'project_brief_intro': projects.brief_intro,
-             'project_create_time': projects.create_time
+             'project_create_time': projects.create_time.strftime('%b-%m-%y %H:%M:%S')
              }
         ans_list.append(a)
     return JsonResponse({'status_code': 1, 'ans_list': ans_list})

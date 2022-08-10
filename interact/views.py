@@ -223,7 +223,7 @@ def agreeInvitation(request):
     new_team_message.team_id = message.team_id
     new_team_message.sender = message.sender
     new_team_message.receiver = message.receiver
-    new_team_message.send_time = datetime.datetime.now()
+    new_team_message.send_time = datetime.datetime.now().strftime('%b-%m-%y %H:%M:%S')
     new_team_message.save()
     # 发消息
 
