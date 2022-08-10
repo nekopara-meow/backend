@@ -553,7 +553,7 @@ def viewProject(request):
         project = Projectt.objects.get(project_id=project_id)
         return JsonResponse({
             'status_code': 1, 'message': '访问成功!',
-            'brief_intro': project.brief_intro, 'create_time': project.create_time,
+            'brief_intro': project.brief_intro, 'create_time': project.create_time.strftime('%b-%m-%y %H:%M:%S'),
             'update_time': project.update_time.strftime('%b-%m-%y %H:%M:%S'), 'creator': project.creator,
             'project_name': project.project_name,
             'team_name': Team.objects.get(team_id=project.team_id).team_name
