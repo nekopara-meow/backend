@@ -35,4 +35,5 @@ urlpatterns = [
     path('viewAxure', viewAxure),
     path('openAxure', openAxure),
     path('closeAxure', closeAxure),
+    path('count/files', count_files_in_project)
 ]
