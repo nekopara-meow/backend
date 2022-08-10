@@ -19,4 +19,5 @@ urlpatterns = [
     path('copyproject', copy_project),
     path('deleteAdmins', deleteAdmins),
     path('getAllAvatarsOfTeam', getAllAvatarsOfTeam),
+    path('deleteteam', delete_team)
 ]
