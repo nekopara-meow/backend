@@ -150,8 +150,10 @@ def viewFilesInProject(request):
         return JsonResponse({'status_code': 2, 'msg': "该用户不在团队中，无权操作"})
     else:
         ans_list = []
-        file_list = File.objects.filter(project_id=project_id, deleted=deleted)
+        file_list = File.objects.filter(project_id=project_id, deleted=deleted).order_by('update_time')
+        i = 0
         for files in file_list:
+            i += 1
             a = {
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
@@ -159,6 +161,8 @@ def viewFilesInProject(request):
                 'update_time': files.update_time.strftime('%b-%m-%y %H:%M:%S'),
             }
             ans_list.append(a)
+            if i == 30:
+                break
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
 
 
