@@ -15,11 +15,11 @@ DOC = 1
 DSN = 2
 
 
-@csrf_exempt
-def clear(request):
-    pros = Projectt.objects.all()
-    for projects in pros:
-        projects.delete()
+# @csrf_exempt
+# def clear(request):
+#     pros = Projectt.objects.all()
+#     for projects in pros:
+#         projects.delete()
 
 
 @csrf_exempt
@@ -123,6 +123,15 @@ def uploadFile(request):
         file.update_time = datetime.datetime.now()
         file.save()
         project.update_time = datetime.datetime.now()
+
+        new_project_message = ProjectMessage()
+        new_project_message.project_id = project_id
+        new_project_message.message_type = 0
+        new_project_message.file_id = file.file_id
+        new_project_message.username = username
+        new_project_message.send_time = datetime.datetime.now()
+        new_project_message.save()
+        # project message
 
         return JsonResponse({'status_code': 1, 'msg': "上传文件成功"})
 
@@ -270,6 +279,16 @@ def newXML(request):
 
         project = Projectt.objects.get(project_id=project_id)
         project.update_time = datetime.datetime.now()
+
+        new_project_message = ProjectMessage()
+        new_project_message.project_id = project_id
+        new_project_message.message_type = 0
+        new_project_message.file_id = file.file_id
+        new_project_message.username = username
+        new_project_message.send_time = datetime.datetime.now()
+        new_project_message.save()
+        # project message
+
         return JsonResponse({'status_code': 1, 'uml_id': file.file_id, 'message': '新建成功'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
 
@@ -314,6 +333,15 @@ def newDOC(request):
         file.creator = username
         file.save()
 
+        new_project_message = ProjectMessage()
+        new_project_message.project_id = project_id
+        new_project_message.message_type = 0
+        new_project_message.file_id = file.file_id
+        new_project_message.username = username
+        new_project_message.send_time = datetime.datetime.now()
+        new_project_message.save()
+        # project message
+
         return JsonResponse({'status_code': 1, 'doc_id': file.file_id, 'message': '新建成功'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
 
@@ -357,6 +385,17 @@ def new_axure(request):
         file.project_id = project_id
         file.creator = username
         file.save()
+
+
+        new_project_message = ProjectMessage()
+        new_project_message.project_id = project_id
+        new_project_message.message_type = 0
+        new_project_message.file_id = file.file_id
+        new_project_message.username = username
+        new_project_message.send_time = datetime.datetime.now()
+        new_project_message.save()
+        # project message
+
         return JsonResponse({'status_code': 1, 'axure_id': file.file_id, 'message': '新建成功'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
 
@@ -364,6 +403,7 @@ def new_axure(request):
 @csrf_exempt
 def del_file_by_id(request):
     if request.method == 'POST':
+        username = json.loads(request.body)['username']
         file_id = json.loads(request.body)['file_id']
         file = File.objects.get(file_id=file_id)
         file.deleted = True
@@ -373,6 +413,16 @@ def del_file_by_id(request):
         filebin.file_id = file_id
         filebin.delete_time = datetime.datetime.now()
         filebin.save()
+
+        new_project_message = ProjectMessage()
+        new_project_message.project_id = file.project_id
+        new_project_message.message_type = 1
+        new_project_message.file_id = file_id
+        new_project_message.username = username
+        new_project_message.send_time = datetime.datetime.now()
+        new_project_message.delete_file_name = file.file_name
+        new_project_message.save()
+        # project message
         return JsonResponse({'status_code': 1, 'message': '删除成功!'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
 

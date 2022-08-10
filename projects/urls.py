@@ -10,7 +10,7 @@ urlpatterns = [
     path('viewUMLsInProject', viewUMLsInProject),
     path('viewDesignsInProject', viewDesignsInProject),
     path('viewTextsInProject', viewTextsInProject),
-    path('clear', clear),
+    # path('clear', clear),
     path('load/xml', loadXML),
     path('load/doc', loadDOC),
     path('load/axure',load_axure),
