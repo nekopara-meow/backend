@@ -31,7 +31,7 @@ def getPersonalMessage(request):
                 'msg':
                     '您被移出了' +
                     str(Team.objects.get(team_id=messages.team_id).team_name),
-                'sender': messages.sender, 'send_time': messages.send_time,
+                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -39,9 +39,9 @@ def getPersonalMessage(request):
             a = {
                 'message_id': messages.message_id,
                 'msg':
-                    str(messages.sender) + '邀请您加入' +
+                    '邀请您加入' +
                     str(Team.objects.get(team_id=messages.team_id).team_name),
-                'sender': messages.sender, 'send_time': messages.send_time,
+                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -51,7 +51,7 @@ def getPersonalMessage(request):
                 'msg':
                     '您被设为了' +
                     str(Team.objects.get(team_id=messages.team_id).team_name) + "的管理员",
-                'sender': messages.sender, 'send_time': messages.send_time,
+                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -61,7 +61,7 @@ def getPersonalMessage(request):
                 'msg':
                     '您被移除了' +
                     str(Team.objects.get(team_id=messages.team_id).team_name) + "的管理员职位",
-                'sender': messages.sender, 'send_time': messages.send_time,
+                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -85,7 +85,7 @@ def getTeamMessage(request):
                 'msg':
                     '邀请了' +
                     str(messages.receiver) + "加入了团队",
-                'sender': messages.sender, 'send_time': messages.send_time,
+                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -96,7 +96,7 @@ def getTeamMessage(request):
                 'msg':
                     '将' +
                     str(messages.receiver) + "移出了团队",
-                'sender': messages.sender, 'send_time': messages.send_time,
+                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -106,7 +106,7 @@ def getTeamMessage(request):
                 'msg':
                     '将' +
                     str(messages.receiver) + "设为了团队管理",
-                'sender': messages.sender, 'send_time': messages.send_time,
+                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -116,7 +116,7 @@ def getTeamMessage(request):
                 'msg':
                     '撤销了' +
                     str(messages.receiver) + "的团队管理",
-                'sender': messages.sender, 'send_time': messages.send_time,
+                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -126,7 +126,7 @@ def getTeamMessage(request):
                 'msg':
                     '新建了项目' +
                     str(Projectt.objects.get(project_id=messages.project_id).project_name),
-                'sender': messages.sender, 'send_time': messages.send_time,
+                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -136,7 +136,7 @@ def getTeamMessage(request):
                 'msg':
                     '删除了项目' +
                     str(messages.delete_project_name),
-                'sender': messages.sender, 'send_time': messages.send_time,
+                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -264,7 +264,7 @@ def search_all(request):
             if keyword in project.project_name:
                 project_info = {'project_name': project.project_name, 'brief_intro': project.brief_intro,
                                 'create_time': project.create_time, 'team_name': project.team_name,
-                                'team_id': project.team_id , 'project_id': project.project_id
+                                'team_id': project.team_id, 'project_id': project.project_id
                                 }
                 project_infos.append(project_info)
         files = File.objects.filter(project_id__in=project_ids, file_name__contains=keyword).order_by('file_id')
