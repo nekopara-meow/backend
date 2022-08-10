@@ -31,4 +31,5 @@ urlpatterns = [
     path('recover/file', recover_file_by_id),
     path('recover/project', recover_project_by_id),
     path('updateprojectinfo', update_project_info),
+    path('viewProject', viewProject),
 ]
