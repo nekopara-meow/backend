@@ -77,14 +77,13 @@ def getTeamMessage(request):
     team_id = json.loads(request.body)['team_id']
     ans_list = []
     message_list = TeamMessage.objects.filter(team_id=team_id).order_by('-send_time')
-    if message_list is None:
-        return JsonResponse({'status_code': 6, 'msg': '???'})
+
     for messages in message_list:
         if messages.message_type == 0:
             a = {
                 'message_id': messages.message_id,
                 'msg':
-                    str(messages.sender) + '邀请了' +
+                    '邀请了' +
                     str(messages.receiver) + "加入了团队",
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
@@ -95,7 +94,7 @@ def getTeamMessage(request):
             a = {
                 'message_id': messages.message_id,
                 'msg':
-                    str(messages.sender) + '将' +
+                    '将' +
                     str(messages.receiver) + "移出了团队",
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
@@ -105,7 +104,7 @@ def getTeamMessage(request):
             a = {
                 'message_id': messages.message_id,
                 'msg':
-                    str(messages.sender) + '将' +
+                    '将' +
                     str(messages.receiver) + "设为了团队管理",
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
@@ -115,7 +114,7 @@ def getTeamMessage(request):
             a = {
                 'message_id': messages.message_id,
                 'msg':
-                    str(messages.sender) + '撤销了' +
+                    '撤销了' +
                     str(messages.receiver) + "的团队管理",
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
@@ -125,7 +124,7 @@ def getTeamMessage(request):
             a = {
                 'message_id': messages.message_id,
                 'msg':
-                    str(messages.sender) + '新建了项目' +
+                    '新建了项目' +
                     str(Projectt.objects.get(project_id=messages.project_id).project_name),
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
@@ -135,7 +134,7 @@ def getTeamMessage(request):
             a = {
                 'message_id': messages.message_id,
                 'msg':
-                    str(messages.sender) + '删除了项目' +
+                    '删除了项目' +
                     str(messages.delete_project_name),
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
@@ -158,7 +157,7 @@ def getProjectMessage(request):
             a = {
                 'message_id': messages.message_id,
                 'msg':
-                    str(messages.sender) + '新建了文件' +
+                    '新建了文件' +
                     str(File.objects.get(file_id=messages.file_id).file_name),
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
@@ -168,7 +167,7 @@ def getProjectMessage(request):
             a = {
                 'message_id': messages.message_id,
                 'msg':
-                    str(messages.sender) + '删除了文件' +
+                    '删除了文件' +
                     str(messages.delete_file_name),
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
@@ -178,7 +177,7 @@ def getProjectMessage(request):
             a = {
                 'message_id': messages.message_id,
                 'msg':
-                    str(messages.sender) + '开放了原型设计' +
+                    '开放了原型设计' +
                     str(File.objects.get(file_id=messages.file_id).file_name) + '的预览',
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
@@ -189,7 +188,7 @@ def getProjectMessage(request):
             a = {
                 'message_id': messages.message_id,
                 'msg':
-                    str(messages.sender) + '关闭了原型设计' +
+                    '关闭了原型设计' +
                     str(File.objects.get(file_id=messages.file_id).file_name) + '的预览',
                 'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
@@ -206,6 +205,18 @@ def getProjectMessage(request):
 def agreeInvitation(request):
     message_id = json.loads(request.body)['message_id']
     message = PersonalMessage.objects.get(message_id=message_id)
+    inviter_username = PersonalMessage.objects.get(message_id=message_id).sender
+    invitee_username = PersonalMessage.objects.get(message_id=message_id).receiver
+    team_id = PersonalMessage.objects.get(message_id=message_id).team_id
+    already_in = Member_in_Team.objects.filter(username=invitee_username, team_id=team_id)
+
+    if already_in:
+        message.delete()
+        return JsonResponse({'status_code': 2, 'msg': "Invitee has been already in the team"})
+    if Member_in_Team.objects.get(username=inviter_username, team_id=team_id).priority < 1:
+        message.delete()
+        return JsonResponse({'status_code': 3, 'msg': "Inviter doesn't have the priority"})
+
 
     new_team_message = TeamMessage()
     new_team_message.message_type = 0
