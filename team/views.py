@@ -84,8 +84,8 @@ def setAdmins(request):
     settee.save()
     new_personal_message = PersonalMessage()
     new_personal_message.message_type = 2
-    new_personal_message.sender = setter
-    new_personal_message.receiver = settee
+    new_personal_message.sender = setter.username
+    new_personal_message.receiver = settee.username
     new_personal_message.send_time = datetime.datetime.now()
     new_personal_message.team_id = team_id
     new_personal_message.save()
@@ -94,8 +94,8 @@ def setAdmins(request):
     new_team_message = TeamMessage()
     new_team_message.message_type = 2
     new_team_message.team_id = team_id
-    new_team_message.sender = setter
-    new_team_message.receiver = settee
+    new_team_message.sender = setter.username
+    new_team_message.receiver = settee.username
     new_team_message.send_time = datetime.datetime.now()
     new_team_message.save()
     # team message
@@ -115,11 +115,12 @@ def deleteAdmins(request):
     if Member_in_Team.objects.get(username=setter.username, team_id=team_id).priority < 2:
         return JsonResponse({'status_code': 3, 'msg': "Setter doesn't have the priority"})
     settee.priority = 0
+    settee.save()
 
     new_personal_message = PersonalMessage()
     new_personal_message.message_type = 3
-    new_personal_message.sender = setter
-    new_personal_message.receiver = settee
+    new_personal_message.sender = setter.username
+    new_personal_message.receiver = settee.username
     new_personal_message.send_time = datetime.datetime.now()
     new_personal_message.team_id = team_id
     new_personal_message.save()
@@ -128,8 +129,8 @@ def deleteAdmins(request):
     new_team_message = TeamMessage()
     new_team_message.message_type = 3
     new_team_message.team_id = team_id
-    new_team_message.sender = setter
-    new_team_message.receiver = settee
+    new_team_message.sender = setter.username
+    new_team_message.receiver = settee.username
     new_team_message.send_time = datetime.datetime.now()
     new_team_message.save()
     # team message
@@ -163,7 +164,6 @@ def deleteMem(request):
     new_team_message.send_time = datetime.datetime.now()
     new_team_message.save()
     # team message
-
     Member_in_Team.objects.get(username=deletee_username, team_id=team_id).delete()
     return JsonResponse({'status_code': 1, 'msg': "删除成功!"})
 
@@ -408,4 +408,4 @@ def getAllAvatarsOfTeam(request):
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
-    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
