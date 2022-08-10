@@ -44,7 +44,8 @@ class File(models.Model):
     update_time = models.DateTimeField(auto_now_add=True)
     deleted = models.BooleanField(verbose_name="是否已被放入回收站", default=False)
     display = models.BooleanField(verbose_name="是否对所有人开放预览", default=False)
-
+    width = models.IntegerField(verbose_name="原型设计长度", null=True)
+    height = models.IntegerField(verbose_name="原型设计高度", null=True)
     class Meta:
         indexes = [
             models.Index(fields=['project_id']),

@@ -157,7 +157,8 @@ def viewFilesInProject(request):
             'file_id': files.file_id, 'file_type': files.file_type,
             'file_name': files.file_name, 'file_content': files.file_url,
             'update_time': files.update_time,
-            'name_url': files.name_url
+            'name_url': files.name_url,
+            'width': files.width, 'height': files.height
         }
         ans_list.append(a)
         if i == 30:
@@ -186,6 +187,7 @@ def viewUMLsInProject(request):
                 'file_id': files.file_id, 'file_type': files.file_type,
                 'file_name': files.file_name, 'file_content': files.file_url,
                 'update_time': files.update_time,
+                'width': files.width, 'height': files.height
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -211,7 +213,8 @@ def viewDesignsInProject(request):
                 'project_id': files.project_id, 'creator': files.creator,
                 'file_id': files.file_id, 'file_type': files.file_type,
                 'file_name': files.file_name, 'file_content': files.file_url,
-                'update_time': files.update_time, 'name_url': files.name_url
+                'update_time': files.update_time, 'name_url': files.name_url,
+                'width': files.width, 'height': files.height
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -238,6 +241,7 @@ def viewTextsInProject(request):
                 'file_id': files.file_id, 'file_type': files.file_type,
                 'file_name': files.file_name, 'file_content': files.file_url,
                 'update_time': files.update_time,
+                'width': files.width, 'height': files.height
             }
             ans_list.append(a)
         return JsonResponse({'status_code': 1, 'ans_list': ans_list})
@@ -302,8 +306,6 @@ def loadDOC(request):
         doc_id = json.loads(request.body)['doc_id']
         file = File.objects.get(file_id=doc_id)
         url = file.file_url
-
-
         return JsonResponse({'status_code': 1, 'doc_url': url, 'message': '获取成功'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
 
@@ -356,7 +358,7 @@ def load_axure(request):
         file = File.objects.get(file_id=doc_id)
         url = file.file_url
         url2 = file.name_url
-        return JsonResponse({'status_code': 1, 'axure_url': url, 'name_url': url2, 'message': '获取成功'})
+        return JsonResponse({'status_code': 1, 'axure_url': url, 'name_url': url2, 'width': file.width, 'height': file.height, 'message': '获取成功'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
 
 
@@ -370,7 +372,6 @@ def save_axure(request):
         file.file_url = axure_url
         file.name_url = name_url
         file.update_time = datetime.datetime.now()
-
         file.save()
         return JsonResponse({'status_code': 1, 'message': '保存成功'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
@@ -383,10 +384,14 @@ def new_axure(request):
         username = json.loads(request.body)['username']
         project_id = json.loads(request.body)['project_id']
         axure_name = json.loads(request.body)['axure_name']
+        width = json.loads(request.body)['width']
+        height = json.loads(request.body)['height']
         file.file_name = axure_name
         file.file_type = DSN
         file.project_id = project_id
         file.creator = username
+        file.width = width
+        file.height = height
         file.save()
 
 
@@ -626,7 +631,8 @@ def viewAxure(request):
         project = Projectt.objects.get(project_id=File.objects.get(file_id=axure_id).project_id)
         already_in = Member_in_Team.objects.filter(team_id=project.team_id, username=username)
         if already_in:
-            return JsonResponse({'status_code': 1, 'file_url': file.file_url, 'name_url': file.name_url})
+            return JsonResponse({'status_code': 1, 'file_url': file.file_url, 'name_url': file.name_url,
+                                 'width': file.width, 'height': file.height})
         return JsonResponse({'status_code': 2, 'msg': '该原型设计未开放，您无权访问！'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
 
