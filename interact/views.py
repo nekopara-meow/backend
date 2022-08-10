@@ -264,7 +264,7 @@ def search_all(request):
             if keyword in project.project_name:
                 project_info = {'project_name': project.project_name, 'brief_intro': project.brief_intro,
                                 'create_time': project.create_time, 'team_name': project.team_name,
-                                'team_id': project.team_id
+                                'team_id': project.team_id , 'project_id': project.project_id
                                 }
                 project_infos.append(project_info)
         files = File.objects.filter(project_id__in=project_ids, file_name__contains=keyword).order_by('file_id')
