@@ -222,7 +222,8 @@ def agreeInvitation(request):
     new_mem_in_team.priority = 0
     new_mem_in_team.save()
     # 加入团队
-    return JsonResponse({'msg': "加入成功"})
+    message.delete()
+    return JsonResponse({'status_code': 1, 'msg': "加入成功"})
 
 
 @csrf_exempt
@@ -230,4 +231,4 @@ def disagreeInvitation(request):
     message_id = json.loads(request.body)['message_id']
     PersonalMessage.objects.get(message_id=message_id).delete()
     # 删除邀请记录
-    return JsonResponse({'msg': "拒绝成功"})
+    return JsonResponse({'status_code': 1, 'msg': "拒绝成功"})

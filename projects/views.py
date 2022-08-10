@@ -546,3 +546,16 @@ def update_project_info(request):
         return JsonResponse({'status_code': 1, 'message': '更新成功!'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
 
+@csrf_exempt
+def viewProject(request):
+    if request.method == 'POST':
+        project_id = json.loads(request.body)['project_id']
+        project = Projectt.objects.get(project_id=project_id)
+        return JsonResponse({
+            'status_code': 1, 'message': '访问成功!',
+            'brief_intro': project.brief_intro, 'create_time': project.create_time,
+            'update_time': project.update_time, 'creator': project.creator,
+            'project_name': project.project_name,
+            'team_name': Team.objects.get(team_id=project.team_id).team_name
+            })
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})

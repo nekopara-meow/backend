@@ -104,8 +104,8 @@ def setAdmins(request):
 
 @csrf_exempt
 def deleteAdmins(request):
-    setter_username = json.loads(request.body)['setter']  # 设置人
-    settee_username = json.loads(request.body)['settee']  # 被设置人
+    setter_username = json.loads(request.body)['canceler']  # 设置人
+    settee_username = json.loads(request.body)['camcelee']  # 被设置人
     team_id = json.loads(request.body)['team_id']
     setter = Member_in_Team.objects.get(username=setter_username, team_id=team_id)
     settee = Member_in_Team.objects.get(username=settee_username, team_id=team_id)
@@ -134,7 +134,7 @@ def deleteAdmins(request):
     new_team_message.save()
     # team message
 
-    return JsonResponse({'status_code': 1, 'msg': "Set success", "tst": settee.priority})
+    return JsonResponse({'status_code': 1, 'msg': "Set success"})
 @csrf_exempt
 def deleteMem(request):
     deleter_username = json.loads(request.body)['deleter_username']  # 删除人
