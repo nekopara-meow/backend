@@ -267,7 +267,7 @@ def search_all(request):
                                 'team_id': project.team_id
                                 }
                 project_infos.append(project_info)
-        files = File.objects.filter(project_id__in=project_ids, file_name__icontains=keyword).order_by('file_id')
+        files = File.objects.filter(project_id__in=project_ids, file_name__contains=keyword).order_by('file_id')
         file_infos = []
         for file in files:
             file_info = {'file_id': file.file_id, 'update_time': file.update_time,
