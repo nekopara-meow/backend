@@ -7,6 +7,7 @@ urlpatterns = [
     path('getProjectMessage', getProjectMessage),
     path('agreeInvitation', agreeInvitation),
     path('disagreeInvitation', disagreeInvitation),
+    path('searchall', search_all)
 
 
 
