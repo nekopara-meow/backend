@@ -31,7 +31,7 @@ def getPersonalMessage(request):
                 'msg':
                     '您被移出了' +
                     str(Team.objects.get(team_id=messages.team_id).team_name),
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -41,7 +41,7 @@ def getPersonalMessage(request):
                 'msg':
                     str(messages.sender) + '邀请您加入' +
                     str(Team.objects.get(team_id=messages.team_id).team_name),
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -51,7 +51,7 @@ def getPersonalMessage(request):
                 'msg':
                     '您被设为了' +
                     str(Team.objects.get(team_id=messages.team_id).team_name) + "的管理员",
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -61,7 +61,7 @@ def getPersonalMessage(request):
                 'msg':
                     '您被移除了' +
                     str(Team.objects.get(team_id=messages.team_id).team_name) + "的管理员职位",
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -85,7 +85,7 @@ def getTeamMessage(request):
                 'msg':
                     '邀请了' +
                     str(messages.receiver) + "加入了团队",
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -96,7 +96,7 @@ def getTeamMessage(request):
                 'msg':
                     '将' +
                     str(messages.receiver) + "移出了团队",
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -106,7 +106,7 @@ def getTeamMessage(request):
                 'msg':
                     '将' +
                     str(messages.receiver) + "设为了团队管理",
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -116,7 +116,7 @@ def getTeamMessage(request):
                 'msg':
                     '撤销了' +
                     str(messages.receiver) + "的团队管理",
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -126,7 +126,7 @@ def getTeamMessage(request):
                 'msg':
                     '新建了项目' +
                     str(Projectt.objects.get(project_id=messages.project_id).project_name),
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -136,7 +136,7 @@ def getTeamMessage(request):
                 'msg':
                     '删除了项目' +
                     str(messages.delete_project_name),
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -159,7 +159,7 @@ def getProjectMessage(request):
                 'msg':
                     '新建了文件' +
                     str(File.objects.get(file_id=messages.file_id).file_name),
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -169,7 +169,7 @@ def getProjectMessage(request):
                 'msg':
                     '删除了文件' +
                     str(messages.delete_file_name),
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -179,7 +179,7 @@ def getProjectMessage(request):
                 'msg':
                     '开放了原型设计' +
                     str(File.objects.get(file_id=messages.file_id).file_name) + '的预览',
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -190,7 +190,7 @@ def getProjectMessage(request):
                 'msg':
                     '关闭了原型设计' +
                     str(File.objects.get(file_id=messages.file_id).file_name) + '的预览',
-                'sender': messages.sender, 'send_time': messages.send_time.strftime('%b-%m-%y %H:%M:%S'),
+                'sender': messages.sender, 'send_time': messages.send_time,
                 'message_type': messages.message_type, 'team_id': messages.team_id,
                 'avatar': User.objects.get(username=messages.sender).avatar
             }
@@ -222,7 +222,7 @@ def agreeInvitation(request):
     new_team_message.team_id = message.team_id
     new_team_message.sender = message.sender
     new_team_message.receiver = message.receiver
-    new_team_message.send_time = datetime.datetime.now().strftime('%b-%m-%y %H:%M:%S')
+    new_team_message.send_time = datetime.datetime.now()
     new_team_message.save()
     # 发消息
 
