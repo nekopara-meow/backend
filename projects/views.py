@@ -52,8 +52,7 @@ def establish(request):
         new_team_message.save()
         # team message
 
-
-        return JsonResponse({'status_code': 1, 'project_id':project.project_id, 'msg': "新建项目成功"})
+        return JsonResponse({'status_code': 1, 'project_id': project.project_id, 'msg': "新建项目成功"})
 
 
 @csrf_exempt
@@ -83,9 +82,6 @@ def delete(request):
         new_team_message.save()
         # team message
         return JsonResponse({'status_code': 1, 'msg': "删除成功,已放入回收站"})
-
-
-
 
 
 @csrf_exempt
@@ -306,6 +302,7 @@ def loadDOC(request):
         doc_id = json.loads(request.body)['doc_id']
         file = File.objects.get(file_id=doc_id)
         url = file.file_url
+
         return JsonResponse({'status_code': 1, 'doc_url': url, 'message': '获取成功'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误'})
 
@@ -393,7 +390,6 @@ def new_axure(request):
         file.width = width
         file.height = height
         file.save()
-
 
         new_project_message = ProjectMessage()
         new_project_message.project_id = project_id
@@ -590,6 +586,7 @@ def recover_project_by_id(request):
         return JsonResponse({'status_code': 1, 'message': '恢复项目成功!'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
 
+
 @csrf_exempt
 def update_project_info(request):
     if request.method == 'POST':
@@ -604,6 +601,7 @@ def update_project_info(request):
         return JsonResponse({'status_code': 1, 'message': '更新成功!'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
 
+
 @csrf_exempt
 def viewProject(request):
     if request.method == 'POST':
@@ -615,7 +613,7 @@ def viewProject(request):
             'update_time': project.update_time, 'creator': project.creator,
             'project_name': project.project_name,
             'team_name': Team.objects.get(team_id=project.team_id).team_name
-            })
+        })
     return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
 
 
@@ -631,10 +629,10 @@ def viewAxure(request):
         project = Projectt.objects.get(project_id=File.objects.get(file_id=axure_id).project_id)
         already_in = Member_in_Team.objects.filter(team_id=project.team_id, username=username)
         if already_in:
-            return JsonResponse({'status_code': 1, 'file_url': file.file_url, 'name_url': file.name_url,
-                                 'width': file.width, 'height': file.height})
+            return JsonResponse({'status_code': 1, 'file_url': file.file_url, 'name_url': file.name_url})
         return JsonResponse({'status_code': 2, 'msg': '该原型设计未开放，您无权访问！'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
+
 
 @csrf_exempt
 def openAxure(request):
@@ -664,6 +662,7 @@ def openAxure(request):
         return JsonResponse({'status_code': 2, 'msg': '您无权开放该原型设计预览！'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
 
+
 @csrf_exempt
 def closeAxure(request):
     if request.method == 'POST':
@@ -692,3 +691,13 @@ def closeAxure(request):
         return JsonResponse({'status_code': 2, 'msg': '您无权关闭该原型设计预览！'})
     return JsonResponse({'status_code': -1, 'message': '请求方式错误!'})
 
+
+@csrf_exempt
+def count_files_in_project(request):
+    if request.method == 'POST':
+        project_id = json.loads(request.body)['project_id']
+        uml_num = File.objects.filter(project_id=project_id, file_type=XML, deleted=False).count()
+        axure_num = File.objects.filter(project_id=project_id, file_type=DSN, deleted=False).count()
+        doc_num = File.objects.filter(project_id=project_id, file_type=DOC, deleted=False).count()
+        return JsonResponse({'status_code': 1, 'uml_num': uml_num, 'axure_num': axure_num, 'doc_num': doc_num})
+    return JsonResponse({'status_code': -1, 'message': '请求方式错误！'})
